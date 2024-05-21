@@ -73,12 +73,15 @@ def get_anime_details(anime_url):
     type = type_tag.text.strip() if type_tag else 'Unknown Type'
 
     theme_element = soup.find('span', string='Themes:')
-    genre_element = soup.find('span', string='Genres:')
+    genre_element = soup.find('span', string='Genres:') or soup.find('span', itemprop='genre')
+
+    # Extract the genres
+    genre = ', '.join([a.text.strip() for a in genre_element.find_next_siblings('a')]) if genre_element else 'Unknown'
     
     demographic_element = soup.find('span', string='Demographic:')
 
     theme = ', '.join([a.text.strip() for a in theme_element.find_next_siblings('a')]) if theme_element else 'Unknown'
-    genre = ', '.join([a.text.strip() for a in genre_element.find_next_siblings('a')]) if genre_element else 'Unknown'
+    # genre = ', '.join([a.text.strip() for a in genre_element.find_next_siblings('a')]) if genre_element else 'Unknown'
     demographic = demographic_element.find_next('a').text.strip() if demographic_element else 'Unknown'
 
     episodes_tag = soup.find('span', string='Episodes:')
@@ -88,7 +91,7 @@ def get_anime_details(anime_url):
     aired_year = re.search(r'\d{4}', aired_tag.find_next_sibling(string=True).strip()).group() if aired_tag else 'Unknown'
     
     
-    print(f'Fetched details for {title} {episode_count} {aired_year} successfully')
+    print(f'Fetched details for {title} {episode_count} {aired_year} {genre.split(',')[0]} successfully')
 
     return {
         'title': title,
