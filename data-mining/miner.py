@@ -7,7 +7,7 @@ import json
 import re
 import pymongo
 
-def get_top_anime_urls(limit=200):
+def get_top_anime_urls(limit=400):
     top_anime_urls = []
     base_url = 'https://myanimelist.net/topanime.php?limit='
     offset = 0
@@ -72,16 +72,23 @@ def get_anime_details(anime_url):
     type_tag = soup.find('span', class_='information type')
     type = type_tag.text.strip() if type_tag else 'Unknown Type'
 
-    theme_element = soup.find('span', text='Themes:')
-    genre_element = soup.find('span', text='Genres:')
+    theme_element = soup.find('span', string='Themes:')
+    genre_element = soup.find('span', string='Genres:')
     
-    demographic_element = soup.find('span', text='Demographic:')
+    demographic_element = soup.find('span', string='Demographic:')
 
     theme = ', '.join([a.text.strip() for a in theme_element.find_next_siblings('a')]) if theme_element else 'Unknown'
     genre = ', '.join([a.text.strip() for a in genre_element.find_next_siblings('a')]) if genre_element else 'Unknown'
     demographic = demographic_element.find_next('a').text.strip() if demographic_element else 'Unknown'
 
-    print(f'Fetched details for {title}')
+    episodes_tag = soup.find('span', string='Episodes:')
+    episode_count = episodes_tag.find_next_sibling(string=True).strip() if episodes_tag else 'Unknown'
+    
+    aired_tag = soup.find('span', string='Aired:')
+    aired_year = re.search(r'\d{4}', aired_tag.find_next_sibling(string=True).strip()).group() if aired_tag else 'Unknown'
+    
+    
+    print(f'Fetched details for {title} {episode_count} {aired_year} successfully')
 
     return {
         'title': title,
@@ -94,7 +101,9 @@ def get_anime_details(anime_url):
         'synopsis': synopsis,
         'url': anime_url,
         'studio': studio,
-        'type': type
+        'type': type,
+        'episode_count': episode_count,
+        'year_first_aired': aired_year,
     }
 
 top_anime_urls = get_top_anime_urls()
