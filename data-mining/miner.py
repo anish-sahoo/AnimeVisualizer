@@ -5,6 +5,7 @@ from bs4 import BeautifulSoup
 import time
 import json
 import re
+import pymongo
 
 def get_top_anime_urls(limit=200):
     top_anime_urls = []
@@ -52,20 +53,12 @@ def get_anime_details(anime_url):
     # Safely extract the score
     score_tag = soup.find('div', class_='score-label')
     score = score_tag.text.strip() if score_tag else 'N/A'
-    
-    # Safely extract genres
-    # genres_tags = soup.find_all('span', itemprop='genre')
-    # genres = [genre.text for genre in genres_tags] if genres_tags else []
-    
+
     # Safely extract synopsis
     synopsis_tag = soup.find('p', itemprop='description')
     synopsis = synopsis_tag.text.strip() if synopsis_tag else 'No synopsis available'
     synopsis = re.sub(r'[\n\r\t]', ' ', synopsis)
     synopsis = synopsis.split('[Written by MAL Rewrite]')[0].strip()
-    
-    # Safely extract the studio
-    # studio_tag = soup.find('span', class_='information studio author')
-    # studio = studio_tag.text.strip() if studio_tag else 'Unknown Studio'
     
     studio_tag = soup.find('span', class_='information studio author')
     if studio_tag:
@@ -75,10 +68,6 @@ def get_anime_details(anime_url):
     else:
         studio = 'Unknown Studio'
 
-    # Safely extract the author
-    # author_tag = soup.find('span', class_='information studio author')
-    # author = author_tag.text.strip() if author_tag else 'Unknown Author'
-
     # Safely extract the type (movie, TV series, etc.)
     type_tag = soup.find('span', class_='information type')
     type = type_tag.text.strip() if type_tag else 'Unknown Type'
@@ -86,37 +75,13 @@ def get_anime_details(anime_url):
     theme_element = soup.find('span', text='Themes:')
     genre_element = soup.find('span', text='Genres:')
     
-    # genres_tag = soup.find('span', text='Genres:')
-    # if genres_tag:
-    #     genres = [a.text.strip() for a in genres_tag.find_next_siblings('a')]
-    #     genres = ', '.join(genres)
-    # else:
-    #     genres = 'Unknown Genres'
-
-    # print(f'Genres: {genres}')
-
-    
     demographic_element = soup.find('span', text='Demographic:')
 
-    # Extract the theme, genre, and demographic values
     theme = ', '.join([a.text.strip() for a in theme_element.find_next_siblings('a')]) if theme_element else 'Unknown'
     genre = ', '.join([a.text.strip() for a in genre_element.find_next_siblings('a')]) if genre_element else 'Unknown'
     demographic = demographic_element.find_next('a').text.strip() if demographic_element else 'Unknown'
 
     print(f'Fetched details for {title}')
-    # print(json.dumps({
-    #     'title': title,
-    #     'english_title': english_title,
-    #     'japanese_title': japanese_title,
-    #     'score': score,
-    #     'genres': genre,
-    #     'themes': theme,
-    #     'demographic': demographic,
-    #     'synopsis': synopsis,
-    #     'url': anime_url,
-    #     'studio': studio,
-    #     'type': type
-    # }, indent=2))
 
     return {
         'title': title,
@@ -132,55 +97,6 @@ def get_anime_details(anime_url):
         'type': type
     }
 
-
-# def get_anime_details(anime_url):
-#     response = requests.get(anime_url, headers=headers)
-#     if response.status_code != 200:
-#         print(f"Failed to fetch {anime_url}: Status code {response.status_code}")
-#         return None
-    
-#     soup = BeautifulSoup(response.content, 'html.parser')
-    
-#     # Safely extract the title
-#     title_tag = soup.find('h1', class_='title-name h1_bold_none')
-#     title = title_tag.find('strong').text.strip() if title_tag and title_tag.find('strong') else 'Unknown Title'
-    
-#     # Safely extract the score
-#     score_tag = soup.find('div', class_='score-label')
-#     score = score_tag.text.strip() if score_tag else 'N/A'
-    
-#     # Safely extract genres
-#     genres_tags = soup.find_all('span', itemprop='genre')
-#     genres = [genre.text for genre in genres_tags] if genres_tags else []
-    
-#     # Safely extract synopsis
-#     synopsis_tag = soup.find('p', itemprop='description')
-#     synopsis = synopsis_tag.text.strip() if synopsis_tag else 'No synopsis available'
-    
-#     # Safely extract the studio
-#     studio_tag = soup.find('span', class_='information studio')
-#     studio = studio_tag.text.strip() if studio_tag else 'Unknown Studio'
-
-#     # Safely extract the author
-#     author_tag = soup.find('span', class_='information studio author')
-#     author = author_tag.text.strip() if author_tag else 'Unknown Author'
-
-#     # Safely extract the type (movie, TV series, etc.)
-#     type_tag = soup.find('span', class_='information type')
-#     type = type_tag.text.strip() if type_tag else 'Unknown Type'
-
-#     print(f'Fetched details for {title}')
-#     return {
-#         'title': title,
-#         'score': score,
-#         'genres': genres,
-#         'synopsis': synopsis,
-#         'url': anime_url,
-#         'studio': studio,
-#         'author': author,
-#         'type': type
-#     }
-
 top_anime_urls = get_top_anime_urls()
 anime_details_list = []
 
@@ -193,3 +109,14 @@ for url in top_anime_urls:
 for anime in anime_details_list:
     print(json.dumps(anime, indent=2))
 
+# Establish MongoDB connection
+client = pymongo.MongoClient("mongodb://localhost:27017/")  # Assuming MongoDB is running locally
+db = client["anime_database"]  # Name of your MongoDB database
+collection = db["anime_details"]  # Name of your collection
+
+# Storing anime details in MongoDB
+for anime in anime_details_list:
+    collection.insert_one(anime)
+    print(f"Inserted {anime['title']} into MongoDB")
+
+client.close()  # Close the MongoDB connection when done
