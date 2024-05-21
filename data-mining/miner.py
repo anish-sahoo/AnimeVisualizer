@@ -7,7 +7,7 @@ import json
 import re
 import pymongo
 
-def get_top_anime_urls(limit=400):
+def get_top_anime_urls(limit=1000):
     top_anime_urls = []
     base_url = 'https://myanimelist.net/topanime.php?limit='
     offset = 0
