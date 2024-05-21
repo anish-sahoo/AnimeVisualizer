@@ -1,7 +1,4 @@
 import pandas as pd
-import cudf
-import cuml
-import cupy as cp
 import matplotlib.pyplot as plt
 import tensorflow as tf
 import tensorflow_hub as hub
@@ -47,32 +44,14 @@ genres_encoded_summed = genres_encoded_dense.groupby(df_exploded.index).sum()
 combined_embeddings = pd.DataFrame(synopsis_embeddings)
 combined_embeddings = pd.concat([combined_embeddings, genres_encoded_summed.reset_index(drop=True)], axis=1)
 
-# Save the embeddings
-# combined_embeddings.to_csv('anime_embeddings.csv', index=False)
-# Or, save using another format if preferred:
-combined_embeddings.to_json('anime_embeddings.json', orient='split')
-# np.save('anime_embeddings.npy', combined_embeddings.to_numpy())
-# combined_embeddings.to_pickle('anime_embeddings.pkl')
+# Select the columns to store
+columns_to_store = ['title', 'english_title', 'japanese_title', 'score', 'genres', 'themes', 'demographic', 'synopsis', 'url', 'studio', 'type', 'episode_count', 'year_first_aired']
 
-# Convert pandas DataFrame to cuDF DataFrame
-# combined_embeddings_cudf = cudf.DataFrame.from_pandas(combined_embeddings)
+# Create a new DataFrame with these columns
+df_to_store = df[columns_to_store]
 
-# # Perform dimensionality reduction with t-SNE using cuML
-# tsne = cuml.TSNE(n_components=2, random_state=42)
-# embeddings_2d_cudf = tsne.fit_transform(combined_embeddings_cudf)
+# Save the DataFrame as a CSV file
+df_to_store.to_csv('anime_details.csv', index=False)
 
-# # Convert embeddings to pandas DataFrame for plotting
-# embeddings_2d = embeddings_2d_cudf.to_pandas()
-
-# # Plot the embeddings with genre coloring
-# plt.figure(figsize=(10, 8))
-# plt.scatter(embeddings_2d.iloc[:, 0], embeddings_2d.iloc[:, 1], alpha=0.5, s=2)
-
-# # Optionally, add labels for a few points
-# for i, title in enumerate(df['title'].head(10)):  # Change to a suitable number
-#     plt.annotate(title, (embeddings_2d.iloc[i, 0], embeddings_2d.iloc[i, 1]))
-
-# plt.title('t-SNE Visualization of Anime Embeddings (cuML)')
-# plt.xlabel('Dimension 1')
-# plt.ylabel('Dimension 2')
-# plt.show()
+# Save the embeddings as a CSV file
+combined_embeddings.to_csv('anime_embeddings.csv', index=False)
