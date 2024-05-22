@@ -7,7 +7,7 @@ import json
 import re
 import pymongo
 
-def get_top_anime_urls(limit=1000):
+def get_top_anime_urls(limit=5000):
     top_anime_urls = []
     base_url = 'https://myanimelist.net/topanime.php?limit='
     offset = 0
@@ -23,7 +23,7 @@ def get_top_anime_urls(limit=1000):
             top_anime_urls.append(link)
         print(f'Collected {len(top_anime_urls)} anime URLs')
         offset += 50
-        time.sleep(1)  # To avoid hitting rate limits
+        time.sleep(2)  # To avoid hitting rate limits
     return top_anime_urls[:limit]
 
 headers = {
@@ -90,8 +90,21 @@ def get_anime_details(anime_url):
     aired_tag = soup.find('span', string='Aired:')
     aired_year = re.search(r'\d{4}', aired_tag.find_next_sibling(string=True).strip()).group() if aired_tag else 'Unknown'
     
+    favorited_count = soup.find('span', string='Favorites:')
+    favorited_count = favorited_count.find_next_sibling(string=True).strip() if favorited_count else 'Unknown'
     
-    print(f'Fetched details for {title} {episode_count} {aired_year} {genre.split(',')[0]} successfully')
+    members_count = soup.find('span', string='Members:')
+    members_count = members_count.find_next_sibling(string=True).strip() if members_count else 'Unknown'
+    
+    popularity = soup.find('span', string='Popularity:')
+    popularity = popularity.find_next_sibling(string=True).strip() if popularity else 'Unknown'
+    
+    ranked = soup.find('span', string='Ranked:')
+    ranked = ranked.find_next_sibling(string=True).strip() if ranked else 'Unknown'
+    ranked = ranked.replace('#', '') if ranked else 'Unknown'
+    
+    
+    print(f'Fetched details for {ranked} {title} {episode_count} {aired_year} {favorited_count} {members_count} {popularity} {genre.split(',')[0]} successfully')
 
     return {
         'title': title,
@@ -107,15 +120,22 @@ def get_anime_details(anime_url):
         'type': type,
         'episode_count': episode_count,
         'year_first_aired': aired_year,
+        'favorited_count': favorited_count,
+        'members_count': members_count,
+        'popularity': popularity,
+        'ranked': ranked
     }
 
 top_anime_urls = get_top_anime_urls()
 anime_details_list = []
 
+# j = 1
 for url in top_anime_urls:
     details = get_anime_details(url)
+    # print(f'{j} Fetched details for {details['title']} successfully')
     anime_details_list.append(details)
-    time.sleep(1)  # To avoid hitting rate limits
+    # j = j+1
+    time.sleep(2)  # To avoid hitting rate limits
 
 # Print or save the anime details
 for anime in anime_details_list:
@@ -124,11 +144,13 @@ for anime in anime_details_list:
 # Establish MongoDB connection
 client = pymongo.MongoClient("mongodb://localhost:27017/")  # Assuming MongoDB is running locally
 db = client["anime_database"]  # Name of your MongoDB database
-collection = db["anime_details"]  # Name of your collection
+collection = db["anime_details_extended"]  # Name of your collection
 
 # Storing anime details in MongoDB
+i = 0
 for anime in anime_details_list:
     collection.insert_one(anime)
-    print(f"Inserted {anime['title']} into MongoDB")
+    print(f"Inserted {i} into MongoDB")
+    i = i+1
 
 client.close()  # Close the MongoDB connection when done
