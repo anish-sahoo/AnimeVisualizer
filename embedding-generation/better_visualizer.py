@@ -10,7 +10,7 @@ combined_embeddings_df = pd.read_csv('anime_embeddings.csv')
 combined_embeddings_array = np.array(combined_embeddings_df)
 
 # Perform dimensionality reduction with t-SNE
-tsne = TSNE(n_components=2, random_state=42)
+tsne = TSNE(n_components=2, random_state=42, verbose=1)
 embeddings_2d = tsne.fit_transform(combined_embeddings_array)
 
 # Load anime details
@@ -56,7 +56,7 @@ fig = px.scatter(embeddings_2d_df,
                  x='Dimension 1', 
                  y='Dimension 2', 
                  color='genre', 
-                 symbol='type', 
+                 symbol='genre', 
                  size='episode_count', 
                  hover_data=['title'])
 
