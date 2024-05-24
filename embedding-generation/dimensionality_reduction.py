@@ -61,22 +61,7 @@ embeddings_2d_df['studio'] = anime_details['studio']
 # Save the combined DataFrame with the reduced dimension embeddings and anime details to a CSV file
 embeddings_2d_df.to_csv('anime_embeddings_2d.csv', index=False)
 
+print(embeddings_2d_df.head())
+# Save the combined DataFrame with the reduced dimension embeddings and anime details to a CSV file
+embeddings_2d_df.to_csv('anime_embeddings_2d.csv', index=False)
 
-# Create the plot using Plotly
-fig = px.scatter(embeddings_2d_df, 
-                 x='Dimension 1', 
-                 y='Dimension 2', 
-                 color='studio', 
-                 symbol='studio', 
-                 size='favorited_count', 
-                 hover_data=['title'])
-
-# Update the marker opacity
-fig.update_traces(marker=dict(opacity=0.5,sizemin=5))
-# , sizeref=10, sizemin=3
-
-# Update the layout of the plot
-fig.update_layout(title='t-SNE Visualization of Anime Embeddings')
-
-# Show the plot
-fig.show()

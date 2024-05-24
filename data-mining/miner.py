@@ -79,10 +79,12 @@ def get_anime_details(anime_url):
     genre = ', '.join([a.text.strip() for a in genre_element.find_next_siblings('a')]) if genre_element else 'Unknown'
     
     demographic_element = soup.find('span', string='Demographic:')
+    demographic = ', '.join([a.text.strip() for a in demographic_element.find_next_siblings('a')]) if demographic_element else 'Unknown'
+    # demographic = demographic_element.find_next('a').text.strip() if demographic_element else 'Unknown'
 
     theme = ', '.join([a.text.strip() for a in theme_element.find_next_siblings('a')]) if theme_element else 'Unknown'
     # genre = ', '.join([a.text.strip() for a in genre_element.find_next_siblings('a')]) if genre_element else 'Unknown'
-    demographic = demographic_element.find_next('a').text.strip() if demographic_element else 'Unknown'
+
 
     episodes_tag = soup.find('span', string='Episodes:')
     episode_count = episodes_tag.find_next_sibling(string=True).strip() if episodes_tag else 'Unknown'
@@ -104,7 +106,7 @@ def get_anime_details(anime_url):
     ranked = ranked.replace('#', '') if ranked else 'Unknown'
     
     
-    print(f'Fetched details for {ranked} {title} {episode_count} {aired_year} {favorited_count} {members_count} {popularity} {genre.split(',')[0]} successfully')
+    print(f'Fetched details for {ranked} {title} {demographic} {episode_count} {aired_year} {favorited_count} {members_count} {popularity} {genre.split(',')[0]} successfully')
 
     return {
         'title': title,
@@ -135,7 +137,7 @@ for url in top_anime_urls:
     # print(f'{j} Fetched details for {details['title']} successfully')
     anime_details_list.append(details)
     # j = j+1
-    time.sleep(2)  # To avoid hitting rate limits
+    time.sleep(1)  # To avoid hitting rate limits
 
 # Print or save the anime details
 for anime in anime_details_list:
@@ -144,7 +146,7 @@ for anime in anime_details_list:
 # Establish MongoDB connection
 client = pymongo.MongoClient("mongodb://localhost:27017/")  # Assuming MongoDB is running locally
 db = client["anime_database"]  # Name of your MongoDB database
-collection = db["anime_details_extended"]  # Name of your collection
+collection = db["anime_details_ext"]  # Name of your collection
 
 # Storing anime details in MongoDB
 i = 0
