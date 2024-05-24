@@ -19,6 +19,9 @@ fetch("anime_embeddings_2d.csv")
     const lines = data.split("\n");
     const points = lines.map((line) => line.split(","));
 
+    console.log(points[0]);
+    console.log(points[1]);
+
     // Find the minimum and maximum values for x and y
     let minX = Infinity;
     let maxX = -Infinity;
