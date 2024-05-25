@@ -1,3 +1,19 @@
+const labels = [
+  "Dimension 1",
+  "Dimension 2",
+  "title",
+  "demographic",
+  "genre",
+  "type",
+  "episode_count",
+  "score",
+  "year_first_aired",
+  "ranked",
+  "members_count",
+  "favorited_count",
+  "studio",
+];
+
 // Create a new PixiJS application
 const app = new PIXI.Application({
   width: window.innerWidth,
@@ -65,21 +81,7 @@ fetch("anime_embeddings_2d.csv")
     console.log("Max members count:", max_members_count);
     console.log("Max favorited count:", max_favorited_count);
 
-    const labels = [
-      "Dimension 1",
-      "Dimension 2",
-      "title",
-      "demographic",
-      "genre",
-      "type",
-      "episode_count",
-      "score",
-      "year_first_aired",
-      "ranked",
-      "members_count",
-      "favorited_count",
-      "studio",
-    ];
+    
 
     // Find the minimum and maximum values for x and y
     let minX = Infinity;
