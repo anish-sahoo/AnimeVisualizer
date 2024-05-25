@@ -22,7 +22,7 @@ app.stage.addChild(container);
 // Create a PIXI Text object for the tooltip
 const tooltip = new PIXI.Text("", {
   fontFamily: "Arial",
-  fontSize: 12,
+  fontSize: 18,
   fill: "white",
   backgroundColor: "black",
   padding: 5,
@@ -134,7 +134,10 @@ function updateGraph(numPoints, filteredPoints = points) {
 }
 
 const pointSlider = document.getElementById("pointSlider");
-pointSlider.addEventListener("input", () => updateGraph(parseInt(pointSlider.value)));
+pointSlider.addEventListener("input", () => {
+  updateGraph(parseInt(pointSlider.value));
+  document.getElementById("numPoints").textContent = "Number of Anime Displayed: " + pointSlider.value; // Display the number of points
+});
 
 const genreCheckboxes = {};
 
