@@ -8,3 +8,7 @@ source venv/bin/activate
 
 # Install dependencies from requirements.txt
 pip install -r requirements.txt
+
+cd ui
+
+npm i
