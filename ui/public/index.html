@@ -1,5 +1,5 @@
 <!doctype html>
-<html>
+<html lang="en">
   <head>
     <title>Anime Visualizer</title>
     <link rel="stylesheet" href="/style.css" />
@@ -8,8 +8,13 @@
   <body>
     <div class="pane">
       <input type="range" id="pointSlider" min="1" max="5000" value="5000" />
-      <ul id="attributeList"></ul>
+      <button id="selectAllButton">Select All</button>
+        <button id="deselectAllButton">Deselect All</button>
+      <ul id="genresList"></ul>
     </div>
-    <script src="/script.js"></script>
+<!--    <script src="/script.js"></script>-->
+    <script type="module" src="/script2.js"></script>
+    <script type="module" src="/utils.js"></script>
+  <script type="module" src="/visualizer.js"></script>
   </body>
 </html>
