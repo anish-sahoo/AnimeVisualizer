@@ -31,31 +31,44 @@ const tooltip = new PIXI.Text("", {
 tooltip.visible = false; // Initially hide the tooltip
 app.stage.addChild(tooltip);
 
-let points, max_episode_count, genres, labels;
+let points,
+  max_episode_count,
+  genres,
+  labels,
+  max_score,
+  max_members_count,
+  max_favorited_count;
 let minX, maxX, minY, maxY, scaleX, scaleY;
 
 fetch("anime_embeddings_2d.csv")
   .then((response) => response.text())
   .then((data) => {
     let processedData = preprocess(data);
-    ({ points, max_episode_count, genres } = processedData);
+    ({
+      points,
+      max_episode_count,
+      genres,
+      max_score,
+      max_members_count,
+      max_favorited_count,
+    } = processedData);
     ({ minX, maxX, minY, maxY } = calculateMaxMin(points));
     ({ scaleX, scaleY } = calculateScalingFactor(app, maxX, minX, maxY, minY));
 
     labels = [
       "Dimension 1",
       "Dimension 2",
-      "title",
-      "demographic",
-      "genre",
-      "type",
-      "episode_count",
-      "score",
-      "year_first_aired",
-      "ranked",
-      "members_count",
-      "favorited_count",
-      "studio",
+      "Title",
+      "Demographic",
+      "Genres",
+      "Type",
+      "No. of episodes",
+      "Rating",
+      "Year",
+      "Rank",
+      "Members count",
+      "Favorited count",
+      "Studio",
     ];
 
     updateGraph(parseInt(pointSlider.value));
@@ -78,7 +91,7 @@ function updateGraph(numPoints, filteredPoints = points) {
     const y = (parseFloat(point[1]) - minY) * scaleY;
 
     const radius =
-      (Math.sqrt(parseInt(point[6])) / Math.sqrt(max_episode_count)) * 10; // Adjust multiplier as needed
+      (Math.sqrt(parseInt(point[10])) / Math.sqrt(max_members_count)) * 4; // Adjust multiplier as needed
 
     // Create a new circle graphics object for each point
     const circle = new PIXI.Graphics();
@@ -107,7 +120,7 @@ function updateGraph(numPoints, filteredPoints = points) {
 function onMouseOver(event) {
   const pointData = event.currentTarget.data;
   let tooltipText = "";
-  for (let i = 0; i < labels.length; i++) {
+  for (let i = 2; i < labels.length; i++) {
     tooltipText += `${labels[i]}: ${pointData[i]}\n`;
   }
   tooltip.text = tooltipText;
@@ -183,8 +196,11 @@ function updateGraphWithCheckboxes() {
   });
 
   // Filter points based on selected genres
-  const filteredPoints = points.filter((point) => selectedGenres.has(point[4]));
+  const filteredPoints = points.filter((point) => {
+    const pointGenres = point[4];
+    return pointGenres.some((genre) => selectedGenres.has(genre));
+  });
 
   // Update the graph with filtered points
-  updateGraph(filteredPoints.length, filteredPoints);
+  updateGraph(filteredPoints.length, points);
 }

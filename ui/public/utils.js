@@ -1,3 +1,21 @@
+// [
+//   0d1 "-15.129277",
+//   1d2 "64.4753",
+//   2title "Naruto the Movie 3: Guardians of the Crescent Moon Kingdom",
+//   3demographic "Shounen",
+//   4genre"\"Action, Adventure, Fantasy\"",
+//   5type"Movie",
+//   6episode_count"1",
+//   7score"6.92",
+//   8year_first_aired"2006",
+//   9ranked"4605",
+//   10members_count"212047",
+//   11favorited_count"161",
+//   12studio"Pierrot"
+//   13synopsis
+// ]
+
+
 export function preprocess(data) {
   const lines = data.split("\n");
   const points = lines
@@ -16,7 +34,9 @@ export function preprocess(data) {
   let max_members_count = 0;
   let max_favorited_count = 0;
   points.forEach((point, index) => {
-    genres.add(point[4]);
+    const pointGenres = point[4].split(",").map((genre) => genre.replace(/"/g, "").replace("\n", "").trim());
+    point[4] = pointGenres;
+    pointGenres.forEach((genre) => genres.add(genre));
     types.add(point[5]);
     studios.add(point[12]);
     demographics.add(point[3]);
@@ -24,6 +44,7 @@ export function preprocess(data) {
     max_score = Math.max(max_score, parseFloat(point[7]));
     max_members_count = Math.max(max_members_count, parseInt(point[10]));
     max_favorited_count = Math.max(max_favorited_count, parseInt(point[11]));
+    console.log(index, point);
   });
 
   console.log("Genres:", genres);

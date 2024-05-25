@@ -27,7 +27,7 @@ embeddings_2d_df['title'] = anime_details['title']
 embeddings_2d_df['demographic'] = anime_details['demographic']
 
 # Define your prioritized genres
-prioritized_genres = ['romance','sports', 'action', 'drama', 'mystery', 'adventure']
+prioritized_genres = ['romance','sports', 'action', 'drama', 'mystery', 'adventure', 'thriller', 'horror']
 
 # Function to select the first prioritized genre
 def select_genre(genres):
@@ -36,11 +36,8 @@ def select_genre(genres):
             return genre
     return genres[0]
 
-# Extract the first prioritized genre
-anime_details['first_genre'] = anime_details['genres'].str.split(',').apply(select_genre)
-
 # Add 'first_genre' to the DataFrame
-embeddings_2d_df['genre'] = anime_details['first_genre']
+embeddings_2d_df['genres'] = anime_details['genres']
 embeddings_2d_df['type'] = anime_details['type']
 
 # Handle 'episode_count' to ensure it is numeric
@@ -57,6 +54,7 @@ embeddings_2d_df['members_count'] = anime_details['members_count']
 embeddings_2d_df['favorited_count'] = anime_details['favorited_count']
 
 embeddings_2d_df['studio'] = anime_details['studio']
+embeddings_2d_df['synopsis'] = anime_details['synopsis']
 
 # Save the combined DataFrame with the reduced dimension embeddings and anime details to a CSV file
 embeddings_2d_df.to_csv('anime_embeddings_2d.csv', index=False)
