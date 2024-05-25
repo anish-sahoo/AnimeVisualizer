@@ -15,7 +15,6 @@
 //   13synopsis
 // ]
 
-
 export function preprocess(data) {
   const lines = data.split("\n");
   const points = lines
@@ -34,7 +33,9 @@ export function preprocess(data) {
   let max_members_count = 0;
   let max_favorited_count = 0;
   points.forEach((point, index) => {
-    const pointGenres = point[4].split(",").map((genre) => genre.replace(/"/g, "").replace("\n", "").trim());
+    const pointGenres = point[4]
+      .split(",")
+      .map((genre) => genre.replace(/"/g, "").replace("\n", "").trim());
     point[4] = pointGenres;
     pointGenres.forEach((genre) => genres.add(genre));
     types.add(point[5]);

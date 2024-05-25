@@ -40,6 +40,14 @@ let points,
   max_favorited_count;
 let minX, maxX, minY, maxY, scaleX, scaleY;
 
+const sizeSelectionLabels = new Map();
+sizeSelectionLabels.set("Members count", {maxVal: max_members_count, index: 10});
+sizeSelectionLabels.set("Favorited count", {maxVal: max_favorited_count, index: 11});
+sizeSelectionLabels.set("Episode count", {maxVal: max_episode_count, index: 6});
+sizeSelectionLabels.set("Score", {maxVal: max_score, index: 7});
+sizeSelectionLabels.set("Rank", {maxVal: 0, index: 9});
+sizeSelectionLabels.set("Year", {maxVal: 0, index: 8});
+
 fetch("anime_embeddings_2d.csv")
   .then((response) => response.text())
   .then((data) => {
@@ -81,10 +89,8 @@ fetch("anime_embeddings_2d.csv")
 implementZoomPan(app, container);
 
 function updateGraph(numPoints, filteredPoints = points) {
-  // Clear the container
   container.removeChildren();
 
-  // Draw a circle for each point, scaled to fit the screen
   for (let i = 0; i < numPoints; i++) {
     const point = filteredPoints[i];
     const x = (parseFloat(point[0]) - minX) * scaleX;
@@ -108,30 +114,22 @@ function updateGraph(numPoints, filteredPoints = points) {
     circle.data = point;
 
     // Add event listeners for hover interaction
-    circle.on("mouseover", onMouseOver);
-    circle.on("mouseout", onMouseOut);
-    circle.on("mousemove", onMouseMove);
-
-    // Add the circle to the container
+    circle.on("mouseover", (event) => {
+      const pointData = event.currentTarget.data;
+      let tooltipText = "";
+      for (let i = 2; i < labels.length; i++) {
+        tooltipText += `${labels[i]}: ${pointData[i]}\n`;
+      }
+      tooltip.text = tooltipText;
+      tooltip.visible = true;
+    });
+    circle.on("mouseout", () => (tooltip.visible = false));
+    circle.on("mousemove", (event) => {
+      const newPosition = event.data.global;
+      tooltip.position.set(newPosition.x + 10, newPosition.y + 10); // Offset to avoid cursor overlap
+    });
     container.addChild(circle);
   }
-}
-
-function onMouseOver(event) {
-  const pointData = event.currentTarget.data;
-  let tooltipText = "";
-  for (let i = 2; i < labels.length; i++) {
-    tooltipText += `${labels[i]}: ${pointData[i]}\n`;
-  }
-  tooltip.text = tooltipText;
-  tooltip.visible = true;
-}
-function onMouseOut() {
-  tooltip.visible = false;
-}
-function onMouseMove(event) {
-  const newPosition = event.data.global;
-  tooltip.position.set(newPosition.x + 10, newPosition.y + 10); // Offset to avoid cursor overlap
 }
 
 const pointSlider = document.getElementById("pointSlider");
@@ -142,10 +140,16 @@ pointSlider.addEventListener("input", function () {
 
 const genreCheckboxes = {};
 
-const selectAllButton = document.getElementById("selectAllButton");
-selectAllButton.addEventListener("click", () => {
+document.getElementById("selectAllButton").addEventListener("click", () => {
   Object.values(genreCheckboxes).forEach((cb) => {
     cb.checked = true;
+  });
+  updateGraphWithCheckboxes();
+});
+
+document.getElementById("deselectAllButton").addEventListener("click", () => {
+  Object.values(genreCheckboxes).forEach((cb) => {
+    cb.checked = false;
   });
   updateGraphWithCheckboxes();
 });
