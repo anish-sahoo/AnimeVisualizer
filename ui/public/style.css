@@ -1,14 +1,3 @@
-/* .pane {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 200px;
-  height: 100%;
-  background-color: #f1f1f1;
-  padding: 10px;
-  box-sizing: border-box;
-  overflow-y: auto;
-} */
 input[type="range"] {
   width: 100%;
   margin-bottom: 10px;
@@ -21,13 +10,6 @@ ul {
 li {
   margin-bottom: 5px;
 }
-/* body {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background-color: black;
-  margin: 0;
-} */
 
 .pane {
   position: fixed;

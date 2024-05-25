@@ -45,7 +45,6 @@ export function preprocess(data) {
     max_score = Math.max(max_score, parseFloat(point[7]));
     max_members_count = Math.max(max_members_count, parseInt(point[10]));
     max_favorited_count = Math.max(max_favorited_count, parseInt(point[11]));
-    console.log(index, point);
   });
 
   console.log("Genres:", genres);
@@ -133,4 +132,20 @@ export function implementZoomPan(app, container) {
       prevY = e.clientY;
     }
   });
+}
+
+export function generateColors(numColors) {
+  const pastelColors = [];
+  const baseHue = Math.floor(Math.random() * 360); // Random base hue
+  const saturation = 30; // Low saturation for pastel colors
+  const lightness = 80; // High lightness for pastel colors
+
+  // Generate pastel colors
+  for (let i = 0; i < numColors; i++) {
+      const hue = (baseHue + i * (360 / numColors)) % 360;
+      const color = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+      pastelColors.push(color);
+  }
+
+  return pastelColors;
 }

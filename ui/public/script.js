@@ -3,6 +3,7 @@ import {
   calculateMaxMin,
   calculateScalingFactor,
   implementZoomPan,
+  generateColors
 } from "./utils.js";
 
 // Create a new PixiJS application
@@ -26,36 +27,31 @@ const tooltip = new PIXI.Text("", {
   backgroundColor: "black",
   padding: 5,
   wordWrap: true,
-  wordWrapWidth: 200,
+  wordWrapWidth: 200
 });
 tooltip.visible = false; // Initially hide the tooltip
 app.stage.addChild(tooltip);
 
-let points,
-  max_episode_count,
-  genres,
-  labels,
-  max_score,
-  max_members_count,
-  max_favorited_count;
+let points, max_episode_count, genres, labels, max_score, max_members_count, max_favorited_count, types, studios, demographics;
 let minX, maxX, minY, maxY, scaleX, scaleY;
 
-const sizeSelectionLabels = new Map();
-sizeSelectionLabels.set("Members count", {maxVal: max_members_count, index: 10});
-sizeSelectionLabels.set("Favorited count", {maxVal: max_favorited_count, index: 11});
-sizeSelectionLabels.set("Episode count", {maxVal: max_episode_count, index: 6});
-sizeSelectionLabels.set("Score", {maxVal: max_score, index: 7});
-sizeSelectionLabels.set("Rank", {maxVal: 0, index: 9});
-sizeSelectionLabels.set("Year", {maxVal: 0, index: 8});
+const genreColorMap = new Map();
+const typeColorMap = new Map();
+const studioColorMap = new Map();
+const demographicColorMap = new Map();
 
-fetch("anime_embeddings_2d.csv")
-  .then((response) => response.text())
-  .then((data) => {
+async function loadData() {
+  try {
+    const response = await fetch("anime_embeddings_2d.csv");
+    const data = await response.text();
     let processedData = preprocess(data);
     ({
       points,
-      max_episode_count,
       genres,
+      types,
+      studios,
+      demographics,
+      max_episode_count,
       max_score,
       max_members_count,
       max_favorited_count,
@@ -78,15 +74,20 @@ fetch("anime_embeddings_2d.csv")
       "Favorited count",
       "Studio",
     ];
-
+    initializeColorMaps();
     updateGraph(parseInt(pointSlider.value));
     addCheckboxes();
-  })
-  .catch((error) => {
+  } catch (error) {
     console.error("Error loading anime_embeddings_2d.csv:", error);
-  });
+  }
+}
 
-implementZoomPan(app, container);
+const initializeColorMaps = () => {
+  const pastelColors = generateColors(Math.max(genres.size, types.size, studios.size, demographics.size));
+  genres.forEach((genre, index) => genreColorMap.set(genre, pastelColors[index]));
+  types.forEach((type, index) => typeColorMap.set(type, pastelColors[index]));
+  demographics.forEach((demographic, index) => demographicColorMap.set(demographic, pastelColors[index]));
+};
 
 function updateGraph(numPoints, filteredPoints = points) {
   container.removeChildren();
@@ -97,11 +98,11 @@ function updateGraph(numPoints, filteredPoints = points) {
     const y = (parseFloat(point[1]) - minY) * scaleY;
 
     const radius =
-      (Math.sqrt(parseInt(point[10])) / Math.sqrt(max_members_count)) * 4; // Adjust multiplier as needed
+      (Math.sqrt(parseInt(point[10])) / Math.sqrt(max_members_count)) * 6; // Adjust multiplier as needed
 
     // Create a new circle graphics object for each point
     const circle = new PIXI.Graphics();
-    circle.beginFill(0xff0000);
+    circle.beginFill(0xff00);
     circle.drawCircle(0, 0, radius); // Increase the radius for better visibility
     circle.endFill();
 
@@ -133,10 +134,7 @@ function updateGraph(numPoints, filteredPoints = points) {
 }
 
 const pointSlider = document.getElementById("pointSlider");
-pointSlider.addEventListener("input", function () {
-  const numPoints = parseInt(pointSlider.value);
-  updateGraph(numPoints);
-});
+pointSlider.addEventListener("input", () => updateGraph(parseInt(pointSlider.value)));
 
 const genreCheckboxes = {};
 
@@ -173,11 +171,9 @@ function addCheckboxes() {
     const isolateButton = document.createElement("button");
     isolateButton.textContent = "Isolate";
     isolateButton.addEventListener("click", () => {
-      // Uncheck all other checkboxes
       Object.values(genreCheckboxes).forEach((cb) => {
         cb.checked = cb === checkbox;
       });
-      // Update the graph with only the selected genre
       updateGraphWithCheckboxes();
     });
     listItem.appendChild(isolateButton);
@@ -192,19 +188,13 @@ function addCheckboxes() {
 }
 
 function updateGraphWithCheckboxes() {
-  const selectedGenres = new Set();
-  Object.keys(genreCheckboxes).forEach((genre) => {
-    if (genreCheckboxes[genre].checked) {
-      selectedGenres.add(genre);
-    }
-  });
+  const selectedGenres = Object.keys(genreCheckboxes)
+    .reduce((acc, genre) => genreCheckboxes[genre].checked ? acc.concat(genre) : acc, []);
 
-  // Filter points based on selected genres
-  const filteredPoints = points.filter((point) => {
-    const pointGenres = point[4];
-    return pointGenres.some((genre) => selectedGenres.has(genre));
-  });
+  const filteredPoints = points.filter(point => point[4].some(genre => selectedGenres.includes(genre)));
 
-  // Update the graph with filtered points
   updateGraph(filteredPoints.length, points);
 }
+
+loadData();
+implementZoomPan(app, container);
