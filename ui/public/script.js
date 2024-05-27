@@ -122,29 +122,37 @@ function updateGraph(numPoints, filteredPoints = points) {
     circle.data.push(mainGenre);
 
     const border = new PIXI.Graphics();
-    const borderWidth = 0.5; // Adjust border width as needed
+    const borderWidth = 0.4; // Adjust border width as needed
     border.lineStyle(borderWidth, 0x000000); // Choose border color
     border.drawCircle(0, 0, radius + borderWidth); // Larger circle for border
     border.endFill();
     circle.addChild(border);
 
     // Add event listeners for hover interaction
-    circle.on("mouseover", (event) => {
-      const pointData = event.currentTarget.data;
-      let tooltipText = "";
-      for (let i = 2; i < labels.length; i++) {
-        tooltipText += `${labels[i]}: ${pointData[i]}\n`;
-      }
-      tooltip.text = tooltipText;
-      tooltip.visible = true;
-    });
-    circle.on("mouseout", () => (tooltip.visible = false));
-    circle.on("mousemove", (event) => {
-      const newPosition = event.data.global;
-      tooltip.position.set(newPosition.x + 10, newPosition.y + 10); // Offset to avoid cursor overlap
-    });
+    circle.on("mouseover", onMouseOver);
+    circle.on("mouseout", onMouseOut);
+    circle.on("mousemove", onMouseMove);
     container.addChild(circle);
   }
+}
+
+function onMouseOver(event) {
+  const pointData = event.currentTarget.data;
+  let tooltipText = "";
+  for (let i = 2; i < labels.length; i++) {
+    tooltipText += `${labels[i]}: ${pointData[i]}\n`;
+  }
+  tooltip.text = tooltipText;
+  tooltip.visible = true;
+}
+
+function onMouseOut() {
+  tooltip.visible = false;
+}
+
+function onMouseMove(event) {
+  const newPosition = event.data.global;
+  tooltip.position.set(newPosition.x + 10, newPosition.y + 10);
 }
 
 const pointSlider = document.getElementById("pointSlider");
@@ -217,8 +225,10 @@ function addCheckboxes() {
     isolateButton.style.marginLeft = "auto";
   }); 
 
-  Object.values(genreCheckboxes).forEach((checkbox) => {
-    checkbox.addEventListener("change", () => updateGraphWithCheckboxes(parseInt(pointSlider.value)));
+  document.getElementById("genresList").addEventListener("change", (event) => {
+    if (event.target.type === "checkbox") {
+      updateGraphWithCheckboxes(parseInt(pointSlider.value));
+    }
   });
 }
 
