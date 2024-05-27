@@ -3,8 +3,15 @@ import {
   calculateMaxMin,
   calculateScalingFactor,
   implementZoomPan,
-  generateColors
+  generateColors,
+  getBestGenre,
 } from "./utils.js";
+import {
+  genreColorMap,
+  typeColorMap,
+  demographicColorMap,
+  studioColorMap,
+} from "./colors.js";
 
 // Create a new PixiJS application
 const app = new PIXI.Application({
@@ -32,13 +39,10 @@ const tooltip = new PIXI.Text("", {
 tooltip.visible = false; // Initially hide the tooltip
 app.stage.addChild(tooltip);
 
-let points, max_episode_count, genres, labels, max_score, max_members_count, max_favorited_count, types, studios, demographics;
+let points, max_episode_count, genres, labels, max_score, max_members_count, max_favorited_count, types, studios, demographics, genre_counts;
 let minX, maxX, minY, maxY, scaleX, scaleY;
 
-const genreColorMap = new Map();
-const typeColorMap = new Map();
-const studioColorMap = new Map();
-const demographicColorMap = new Map();
+const point_limit = 1000;
 
 async function loadData() {
   try {
@@ -55,6 +59,7 @@ async function loadData() {
       max_score,
       max_members_count,
       max_favorited_count,
+      genre_counts,
     } = processedData);
     ({ minX, maxX, minY, maxY } = calculateMaxMin(points));
     ({ scaleX, scaleY } = calculateScalingFactor(app, maxX, minX, maxY, minY));
@@ -74,7 +79,6 @@ async function loadData() {
       "Favorited count",
       "Studio",
     ];
-    initializeColorMaps();
     updateGraph(parseInt(pointSlider.value));
     addCheckboxes();
   } catch (error) {
@@ -82,27 +86,29 @@ async function loadData() {
   }
 }
 
-const initializeColorMaps = () => {
-  const pastelColors = generateColors(Math.max(genres.size, types.size, studios.size, demographics.size));
-  genres.forEach((genre, index) => genreColorMap.set(genre, pastelColors[index]));
-  types.forEach((type, index) => typeColorMap.set(type, pastelColors[index]));
-  demographics.forEach((demographic, index) => demographicColorMap.set(demographic, pastelColors[index]));
-};
-
 function updateGraph(numPoints, filteredPoints = points) {
   container.removeChildren();
 
-  for (let i = 0; i < numPoints; i++) {
+  for (let i = 0; i < Math.min(numPoints, point_limit); i++) {
     const point = filteredPoints[i];
     const x = (parseFloat(point[0]) - minX) * scaleX;
     const y = (parseFloat(point[1]) - minY) * scaleY;
 
     const radius =
-      (Math.sqrt(parseInt(point[10])) / Math.sqrt(max_members_count)) * 6; // Adjust multiplier as needed
+      (Math.sqrt(parseInt(point[6])) / Math.sqrt(max_episode_count)) * 60; // Adjust multiplier as needed
 
     // Create a new circle graphics object for each point
+    
+    const mainGenre = getBestGenre(point[4]);
+    const demographic = point[3];
+    const type = point[5];
+    const color = genreColorMap.get(mainGenre);
+    // const color = demographicColorMap.get(demographic);
+    // const color = typeColorMap.get(type);
+    // const color = studioColorMap.get(point[12]) || 0xffffff;
+
     const circle = new PIXI.Graphics();
-    circle.beginFill(0xff00);
+    circle.beginFill(color);
     circle.drawCircle(0, 0, radius); // Increase the radius for better visibility
     circle.endFill();
 
@@ -113,6 +119,7 @@ function updateGraph(numPoints, filteredPoints = points) {
     circle.interactive = true;
     circle.buttonMode = true;
     circle.data = point;
+    circle.data.push(mainGenre);
 
     // Add event listeners for hover interaction
     circle.on("mouseover", (event) => {
@@ -163,9 +170,15 @@ function addCheckboxes() {
     checkbox.value = genre;
     checkbox.id = genre;
     checkbox.checked = true; // Set to checked by default
+    
     const label = document.createElement("label");
     label.htmlFor = genre;
     label.appendChild(document.createTextNode(genre));
+    
+    const count = genre_counts[genre] || 0; // Use 0 as a default value if the genre is not found in the counts object
+    const countText = document.createTextNode(` (${count})`);
+    label.appendChild(countText);
+
     const listItem = document.createElement("li");
     listItem.appendChild(checkbox);
     listItem.appendChild(label);
@@ -193,10 +206,11 @@ function addCheckboxes() {
 function updateGraphWithCheckboxes() {
   const selectedGenres = Object.keys(genreCheckboxes)
     .reduce((acc, genre) => genreCheckboxes[genre].checked ? acc.concat(genre) : acc, []);
-
-  const filteredPoints = points.filter(point => point[4].some(genre => selectedGenres.includes(genre)));
-
-  updateGraph(filteredPoints.length, points);
+  console.log("Selected genres:", selectedGenres, typeof selectedGenres[0]);
+  // const filteredPoints = points.filter(point => point[4].includes(selectedGenres[0]));
+  const filteredPoints = points.filter(point => selectedGenres.some(genre => point[4].includes(genre))).slice(0, point_limit);
+  console.log("Filtered points length:", filteredPoints.length);
+  updateGraph(filteredPoints.length, filteredPoints);
 }
 
 loadData();

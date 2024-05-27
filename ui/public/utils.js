@@ -28,6 +28,7 @@ export function preprocess(data) {
   const types = new Set();
   const studios = new Set();
   const demographics = new Set();
+  const genre_counts = {};
   let max_episode_count = 0;
   let max_score = 0;
   let max_members_count = 0;
@@ -37,9 +38,16 @@ export function preprocess(data) {
       .split(",")
       .map((genre) => genre.replace(/"/g, "").replace("\n", "").trim());
     point[4] = pointGenres;
-    pointGenres.forEach((genre) => genres.add(genre));
+    pointGenres.forEach((genre) => {
+      genres.add(genre);
+      if (genre_counts[genre]) {
+        genre_counts[genre]++;
+      } else {
+        genre_counts[genre] = 1;
+      }
+    });
     types.add(point[5]);
-    studios.add(point[12]);
+    studios.add(point[12].replace(/"/g, "").replace("\n", "").trim());
     demographics.add(point[3]);
     max_episode_count = Math.max(max_episode_count, parseInt(point[6]));
     max_score = Math.max(max_score, parseFloat(point[7]));
@@ -66,6 +74,7 @@ export function preprocess(data) {
     max_score,
     max_members_count,
     max_favorited_count,
+    genre_counts,
   };
 }
 
@@ -134,18 +143,73 @@ export function implementZoomPan(app, container) {
   });
 }
 
-export function generateColors(numColors) {
-  const pastelColors = [];
-  const baseHue = Math.floor(Math.random() * 360); // Random base hue
-  const saturation = 30; // Low saturation for pastel colors
-  const lightness = 80; // High lightness for pastel colors
+function hslToRgb(h, s, l) {
+  s /= 100;
+  l /= 100;
 
-  // Generate pastel colors
-  for (let i = 0; i < numColors; i++) {
-      const hue = (baseHue + i * (360 / numColors)) % 360;
-      const color = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
-      pastelColors.push(color);
+  let c = (1 - Math.abs(2 * l - 1)) * s;
+  let x = c * (1 - Math.abs((h / 60) % 2 - 1));
+  let m = l - c / 2;
+  let r = 0, g = 0, b = 0;
+
+  if (0 <= h && h < 60) {
+      r = c; g = x; b = 0;
+  } else if (60 <= h && h < 120) {
+      r = x; g = c; b = 0;
+  } else if (120 <= h && h < 180) {
+      r = 0; g = c; b = x;
+  } else if (180 <= h && h < 240) {
+      r = 0; g = x; b = c;
+  } else if (240 <= h && h < 300) {
+      r = x; g = 0; b = c;
+  } else if (300 <= h && h < 360) {
+      r = c; g = 0; b = x;
   }
 
-  return pastelColors;
+  r = Math.round((r + m) * 255);
+  g = Math.round((g + m) * 255);
+  b = Math.round((b + m) * 255);
+
+  return { r, g, b };
+}
+
+function rgbToHex(r, g, b) {
+  const toHex = (n) => n.toString(16).padStart(2, '0');
+  return `0x${toHex(r)}${toHex(g)}${toHex(b)}`;
+}
+
+export function generateColors(numColors) {
+  const colors = [];
+  const saturation = 100; // High saturation for bright colors
+  const lightness = 50; // Medium lightness for bright colors
+
+  for (let i = 0; i < numColors; i++) {
+      const hue = Math.floor(Math.random() * 360); // Random hue
+      const { r, g, b } = hslToRgb(hue, saturation, lightness);
+      const hexColor = rgbToHex(r, g, b);
+      colors.push(hexColor);
+  }
+
+  return colors;
+}
+
+
+
+
+export const getBestGenre = (genres) => {
+  const main_genres = ['Adventure', 'Comedy', 'Mecha', 'Mystery', 'Psychological', 'Romance', 'Sci-Fi', 'Slice of Life', 'Supernatural', 'Thriller'];
+  const secondary_genres = ['Action', 'Drama', 'Fantasy', 'Horror', 'Magic', 'Military', 'Music', 'Parody', 'School', 'Shounen', 'Sports', 'Super Power'];
+    
+  const genresSet = new Set(genres);
+    for (let i = 0; i < main_genres.length; i++) {
+      if (genresSet.has(main_genres[i])) {
+      return main_genres[i];
+      }
+    }
+    for (let i = 0; i < secondary_genres.length; i++) {
+    if (genresSet.has(secondary_genres[i])) {
+      return secondary_genres[i];
+    }
+    }
+    return genres[0];
 }
