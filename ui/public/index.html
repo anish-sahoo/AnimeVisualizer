@@ -4,6 +4,7 @@
     <title>Anime Visualizer</title>
     <link rel="stylesheet" href="/style.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/5.3.3/pixi.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/pixi-filters@latest/dist/browser/pixi-filters.min.js"></script>
   </head>
   <body>
     <div class="pane">
@@ -17,19 +18,25 @@
           <option value="type">Type</option>
           <option value="studio">Studio</option>
         </select>
+        <br/>
         <label for="sizeAttributeDropdown">Size Attribute:</label>
         <select id="sizeAttributeDropdown">
           <option value="episode">Number of Episodes</option>
           <option value="rating">Rating</option>
           <option value="members">Members Count</option>
           <option value="favorited">Favorited Count</option>
+          <option value="constant">Equal Size</option>
         </select>
       </div>      
       <button id="toggleCheckboxesButton">Show/Hide Genres</button>
       <div id="checkboxContainer" class="hidden">
-        <button id="selectAllButton">Select All</button>
-        <button id="deselectAllButton">Deselect All</button>
-        <ul id="genresList"></ul>
+        <div class="buttons">
+          <button id="selectAllButton">Select All</button>
+          <button id="deselectAllButton">Deselect All</button>
+        </div>
+        <div class="scrollable">
+          <ul id="genresList"></ul>
+        </div>
       </div>
     </div>
     <script type="module" src="/script.js"></script>

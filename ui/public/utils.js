@@ -15,6 +15,8 @@
 //   13synopsis
 // ]
 
+import { genreColorMap, demographicColorMap, typeColorMap, studioColorMap } from './colors.js';
+
 export function preprocess(data) {
   const lines = data.split("\n");
   const points = lines
@@ -193,9 +195,6 @@ export function generateColors(numColors) {
   return colors;
 }
 
-
-
-
 export const getBestGenre = (genres) => {
   const main_genres = ['Adventure', 'Comedy', 'Mecha', 'Mystery', 'Psychological', 'Romance', 'Sci-Fi', 'Slice of Life', 'Supernatural', 'Thriller'];
   const secondary_genres = ['Action', 'Drama', 'Fantasy', 'Horror', 'Magic', 'Military', 'Music', 'Parody', 'School', 'Shounen', 'Sports', 'Super Power'];
@@ -212,4 +211,34 @@ export const getBestGenre = (genres) => {
     }
     }
     return genres[0];
+}
+
+export const calculateRadius = (selectedSizeAttribute, point, multiplier, max_episode_count, max_score, max_members_count, max_favorited_count) => {
+  switch (selectedSizeAttribute) {
+    case "episode":
+      return (Math.sqrt(parseInt(point[6])) / Math.sqrt(max_episode_count)) * 40 * multiplier;
+    case "rating":
+      // return (parseFloat(point[7]) / 10) * 5 * multiplier; // Assuming rating is out of 10
+      return Math.pow(parseFloat(point[7]) / 10, 10) * 20 * multiplier; // Cubing the rating
+    case "members":
+      return (parseInt(point[10]) / max_members_count) * 20 * multiplier;
+    case "favorited":
+      return (parseInt(point[11]) / max_favorited_count) * 20 * multiplier;
+  }
+  return 2 * multiplier;
+}
+
+export const calculateColor = (selectedColorAttribute, point) => {
+  switch (selectedColorAttribute) {
+    case "genre":
+      const mainGenre = getBestGenre(point[4]);
+      return genreColorMap.get(mainGenre);
+    case "demographic":
+      return demographicColorMap.get(point[3]);
+    case "type":
+      return typeColorMap.get(point[5]);
+    case "studio":
+      return studioColorMap.get(point[12]) || 0xffffff;
+  }
+  return 0xffffff;
 }

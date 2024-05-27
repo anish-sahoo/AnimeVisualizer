@@ -53,3 +53,12 @@ body {
   padding: 0;
   margin: 0;
 }
+
+.scrollable {
+  overflow-y: auto;
+  max-height: 300px;
+}
+
+.buttons {
+  margin-bottom: 10px;
+}

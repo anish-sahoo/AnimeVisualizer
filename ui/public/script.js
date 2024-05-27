@@ -3,8 +3,9 @@ import {
   calculateMaxMin,
   calculateScalingFactor,
   implementZoomPan,
-  generateColors,
   getBestGenre,
+  calculateRadius,
+  calculateColor,
 } from "./utils.js";
 import {
   genreColorMap,
@@ -86,26 +87,33 @@ async function loadData() {
   }
 }
 
+const colorAttributeDropdown = document.getElementById("colorAttributeDropdown");
+const sizeAttributeDropdown = document.getElementById("sizeAttributeDropdown");
+
+colorAttributeDropdown.addEventListener("change", () => {
+  // updateGraph(parseInt(pointSlider.value));
+  updateGraphWithCheckboxes();
+});
+
+sizeAttributeDropdown.addEventListener("change", () => {
+  // updateGraph(parseInt(pointSlider.value));
+  updateGraphWithCheckboxes();
+});
+
 function updateGraph(numPoints, filteredPoints = points) {
   container.removeChildren();
+
+  const selectedColorAttribute = colorAttributeDropdown.value;
+  const selectedSizeAttribute = sizeAttributeDropdown.value;
 
   for (let i = 0; i < Math.min(numPoints, point_limit); i++) {
     const point = filteredPoints[i];
     const x = (parseFloat(point[0]) - minX) * scaleX;
     const y = (parseFloat(point[1]) - minY) * scaleY;
-
-    const radius =
-      (Math.sqrt(parseInt(point[6])) / Math.sqrt(max_episode_count)) * 60; // Adjust multiplier as needed
-
-    // Create a new circle graphics object for each point
-    
+    const multiplier = 1; // Multiplier to scale the radius
+    const radius = calculateRadius(selectedSizeAttribute, point, multiplier, max_episode_count, max_score, max_members_count, max_favorited_count);
+    const color = calculateColor(selectedColorAttribute, point);
     const mainGenre = getBestGenre(point[4]);
-    const demographic = point[3];
-    const type = point[5];
-    const color = genreColorMap.get(mainGenre);
-    // const color = demographicColorMap.get(demographic);
-    // const color = typeColorMap.get(type);
-    // const color = studioColorMap.get(point[12]) || 0xffffff;
 
     const circle = new PIXI.Graphics();
     circle.beginFill(color);
@@ -120,6 +128,13 @@ function updateGraph(numPoints, filteredPoints = points) {
     circle.buttonMode = true;
     circle.data = point;
     circle.data.push(mainGenre);
+
+    // const border = new PIXI.Graphics();
+    // const borderWidth = 0.5; // Adjust border width as needed
+    // border.lineStyle(borderWidth, 0x000000); // Choose border color
+    // border.drawCircle(0, 0, radius + borderWidth); // Larger circle for border
+    // border.endFill();
+    // circle.addChild(border);
 
     // Add event listeners for hover interaction
     circle.on("mouseover", (event) => {
@@ -142,7 +157,8 @@ function updateGraph(numPoints, filteredPoints = points) {
 
 const pointSlider = document.getElementById("pointSlider");
 pointSlider.addEventListener("input", () => {
-  updateGraph(parseInt(pointSlider.value));
+  // updateGraph(parseInt(pointSlider.value));
+  updateGraphWithCheckboxes(parseInt(pointSlider.value));
   document.getElementById("numPoints").textContent = "Number of Anime Displayed: " + pointSlider.value; // Display the number of points
 });
 
@@ -212,12 +228,12 @@ function addCheckboxes() {
   });
 }
 
-function updateGraphWithCheckboxes() {
+function updateGraphWithCheckboxes(numPoints = parseInt(pointSlider.value)) {
   const selectedGenres = Object.keys(genreCheckboxes)
     .reduce((acc, genre) => genreCheckboxes[genre].checked ? acc.concat(genre) : acc, []);
   console.log("Selected genres:", selectedGenres, typeof selectedGenres[0]);
   // const filteredPoints = points.filter(point => point[4].includes(selectedGenres[0]));
-  const filteredPoints = points.filter(point => selectedGenres.some(genre => point[4].includes(genre))).slice(0, point_limit);
+  const filteredPoints = points.filter(point => selectedGenres.some(genre => point[4].includes(genre))).slice(0, numPoints);
   console.log("Filtered points length:", filteredPoints.length);
   updateGraph(filteredPoints.length, filteredPoints);
 }
