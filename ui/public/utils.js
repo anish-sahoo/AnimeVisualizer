@@ -221,7 +221,8 @@ export const calculateRadius = (selectedSizeAttribute, point, multiplier, max_ep
     case "rating":
       return Math.pow(parseFloat(point[7]) / 10, 10) * 20 * multiplier; // Cubing the rating
     case "members":
-      return (parseInt(point[10]) / max_members_count) * 20 * multiplier;
+      // return (parseInt(point[10]) / max_members_count) * 20 * multiplier;
+      return 2 + (parseInt(point[10]) / max_members_count) * 20 * multiplier;
     case "favorited":
       return (2 + (parseInt(point[11]) / max_favorited_count) * 20) * multiplier;
   }

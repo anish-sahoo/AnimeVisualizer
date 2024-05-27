@@ -218,17 +218,16 @@ function addCheckboxes() {
   }); 
 
   Object.values(genreCheckboxes).forEach((checkbox) => {
-    checkbox.addEventListener("change", updateGraphWithCheckboxes);
+    checkbox.addEventListener("change", () => updateGraphWithCheckboxes(parseInt(pointSlider.value)));
   });
 }
 
 function updateGraphWithCheckboxes(numPoints = parseInt(pointSlider.value)) {
   const selectedGenres = Object.keys(genreCheckboxes)
     .reduce((acc, genre) => genreCheckboxes[genre].checked ? acc.concat(genre) : acc, []);
-  // console.log("Selected genres:", selectedGenres, typeof selectedGenres[0]);
-  // const filteredPoints = points.filter(point => point[4].includes(selectedGenres[0]));
   const filteredPoints = points.filter(point => selectedGenres.some(genre => point[4].includes(genre))).slice(0, numPoints);
-  // console.log("Filtered points length:", filteredPoints.length);
+  // pointSlider.setAttribute('value', filteredPoints.length);
+  // document.getElementById("numPoints").textContent = "Number of Anime Displayed: " + filteredPoints.length; // Display the number of points
   updateGraph(filteredPoints.length, filteredPoints);
 }
 
