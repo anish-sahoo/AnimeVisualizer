@@ -7,12 +7,8 @@ import {
   calculateRadius,
   calculateColor,
 } from "./utils.js";
-import {
-  genreColorMap,
-  typeColorMap,
-  demographicColorMap,
-  studioColorMap,
-} from "./colors.js";
+
+const point_limit = 5000; // Limit the number of points to display
 
 // Create a new PixiJS application
 const app = new PIXI.Application({
@@ -43,13 +39,11 @@ app.stage.addChild(tooltip);
 let points, max_episode_count, genres, labels, max_score, max_members_count, max_favorited_count, types, studios, demographics, genre_counts;
 let minX, maxX, minY, maxY, scaleX, scaleY;
 
-const point_limit = 1000;
-
 async function loadData() {
   try {
     const response = await fetch("anime_embeddings_2d.csv");
     const data = await response.text();
-    let processedData = preprocess(data);
+    let processedData = preprocess(data, point_limit);
     ({
       points,
       genres,
@@ -91,12 +85,10 @@ const colorAttributeDropdown = document.getElementById("colorAttributeDropdown")
 const sizeAttributeDropdown = document.getElementById("sizeAttributeDropdown");
 
 colorAttributeDropdown.addEventListener("change", () => {
-  // updateGraph(parseInt(pointSlider.value));
   updateGraphWithCheckboxes();
 });
 
 sizeAttributeDropdown.addEventListener("change", () => {
-  // updateGraph(parseInt(pointSlider.value));
   updateGraphWithCheckboxes();
 });
 
@@ -111,7 +103,7 @@ function updateGraph(numPoints, filteredPoints = points) {
     const x = (parseFloat(point[0]) - minX) * scaleX;
     const y = (parseFloat(point[1]) - minY) * scaleY;
     const multiplier = 1; // Multiplier to scale the radius
-    const radius = calculateRadius(selectedSizeAttribute, point, multiplier, max_episode_count, max_score, max_members_count, max_favorited_count);
+    const radius = calculateRadius(selectedSizeAttribute, point, multiplier, max_episode_count, max_members_count, max_favorited_count);
     const color = calculateColor(selectedColorAttribute, point);
     const mainGenre = getBestGenre(point[4]);
 
@@ -129,12 +121,12 @@ function updateGraph(numPoints, filteredPoints = points) {
     circle.data = point;
     circle.data.push(mainGenre);
 
-    // const border = new PIXI.Graphics();
-    // const borderWidth = 0.5; // Adjust border width as needed
-    // border.lineStyle(borderWidth, 0x000000); // Choose border color
-    // border.drawCircle(0, 0, radius + borderWidth); // Larger circle for border
-    // border.endFill();
-    // circle.addChild(border);
+    const border = new PIXI.Graphics();
+    const borderWidth = 0.5; // Adjust border width as needed
+    border.lineStyle(borderWidth, 0x000000); // Choose border color
+    border.drawCircle(0, 0, radius + borderWidth); // Larger circle for border
+    border.endFill();
+    circle.addChild(border);
 
     // Add event listeners for hover interaction
     circle.on("mouseover", (event) => {
@@ -156,8 +148,10 @@ function updateGraph(numPoints, filteredPoints = points) {
 }
 
 const pointSlider = document.getElementById("pointSlider");
+pointSlider.setAttribute('max', point_limit);
+pointSlider.setAttribute('value', point_limit);
+document.getElementById("numPoints").textContent = `Number of Anime Displayed: ${point_limit}`;
 pointSlider.addEventListener("input", () => {
-  // updateGraph(parseInt(pointSlider.value));
   updateGraphWithCheckboxes(parseInt(pointSlider.value));
   document.getElementById("numPoints").textContent = "Number of Anime Displayed: " + pointSlider.value; // Display the number of points
 });
@@ -231,10 +225,10 @@ function addCheckboxes() {
 function updateGraphWithCheckboxes(numPoints = parseInt(pointSlider.value)) {
   const selectedGenres = Object.keys(genreCheckboxes)
     .reduce((acc, genre) => genreCheckboxes[genre].checked ? acc.concat(genre) : acc, []);
-  console.log("Selected genres:", selectedGenres, typeof selectedGenres[0]);
+  // console.log("Selected genres:", selectedGenres, typeof selectedGenres[0]);
   // const filteredPoints = points.filter(point => point[4].includes(selectedGenres[0]));
   const filteredPoints = points.filter(point => selectedGenres.some(genre => point[4].includes(genre))).slice(0, numPoints);
-  console.log("Filtered points length:", filteredPoints.length);
+  // console.log("Filtered points length:", filteredPoints.length);
   updateGraph(filteredPoints.length, filteredPoints);
 }
 
