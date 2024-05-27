@@ -146,6 +146,11 @@ pointSlider.addEventListener("input", () => {
   document.getElementById("numPoints").textContent = "Number of Anime Displayed: " + pointSlider.value; // Display the number of points
 });
 
+document.getElementById("toggleCheckboxesButton").addEventListener("click", () => {
+  const checkboxContainer = document.getElementById("checkboxContainer");
+  checkboxContainer.classList.toggle("hidden");
+});
+
 const genreCheckboxes = {};
 
 document.getElementById("selectAllButton").addEventListener("click", () => {
@@ -180,6 +185,7 @@ function addCheckboxes() {
     label.appendChild(countText);
 
     const listItem = document.createElement("li");
+    listItem.classList.add("checkbox-item");
     listItem.appendChild(checkbox);
     listItem.appendChild(label);
 
@@ -196,7 +202,10 @@ function addCheckboxes() {
 
     genresList.appendChild(listItem);
     genreCheckboxes[genre] = checkbox;
-  });
+
+    listItem.style.display = "flex"; // Set display to flex for alignment
+    isolateButton.style.marginLeft = "auto";
+  }); 
 
   Object.values(genreCheckboxes).forEach((checkbox) => {
     checkbox.addEventListener("change", updateGraphWithCheckboxes);

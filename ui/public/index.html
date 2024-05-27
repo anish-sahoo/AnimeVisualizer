@@ -9,9 +9,28 @@
     <div class="pane">
       <label for="pointSlider" id="numPoints">Number of Anime Displayed: 1000</label
       ><input type="range" id="pointSlider" min="1" max="1000" value="1000" />
-      <button id="selectAllButton">Select All</button>
-      <button id="deselectAllButton">Deselect All</button>
-      <ul id="genresList"></ul>
+      <div id="dropdownContainer">
+        <label for="colorAttributeDropdown">Color Attribute:</label>
+        <select id="colorAttributeDropdown">
+          <option value="genre">Genre</option>
+          <option value="demographic">Demographic</option>
+          <option value="type">Type</option>
+          <option value="studio">Studio</option>
+        </select>
+        <label for="sizeAttributeDropdown">Size Attribute:</label>
+        <select id="sizeAttributeDropdown">
+          <option value="episode">Number of Episodes</option>
+          <option value="rating">Rating</option>
+          <option value="members">Members Count</option>
+          <option value="favorited">Favorited Count</option>
+        </select>
+      </div>      
+      <button id="toggleCheckboxesButton">Show/Hide Genres</button>
+      <div id="checkboxContainer" class="hidden">
+        <button id="selectAllButton">Select All</button>
+        <button id="deselectAllButton">Deselect All</button>
+        <ul id="genresList"></ul>
+      </div>
     </div>
     <script type="module" src="/script.js"></script>
     <script type="module" src="/utils.js"></script>
