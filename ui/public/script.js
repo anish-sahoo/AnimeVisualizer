@@ -232,12 +232,26 @@ function addCheckboxes() {
   });
 }
 
+document.querySelectorAll('input[name="genreOperation"]').forEach(radio => {
+  radio.addEventListener('change', () => {
+    updateGraphWithCheckboxes(parseInt(pointSlider.value));
+  });
+});
+
 function updateGraphWithCheckboxes(numPoints = parseInt(pointSlider.value)) {
   const selectedGenres = Object.keys(genreCheckboxes)
     .reduce((acc, genre) => genreCheckboxes[genre].checked ? acc.concat(genre) : acc, []);
-  const filteredPoints = points.filter(point => selectedGenres.some(genre => point[4].includes(genre))).slice(0, numPoints);
-  // pointSlider.setAttribute('value', filteredPoints.length);
-  // document.getElementById("numPoints").textContent = "Number of Anime Displayed: " + filteredPoints.length; // Display the number of points
+  const operation = document.querySelector('input[name="genreOperation"]:checked').value;
+  let filteredPoints;
+  if (operation === "union") {
+    filteredPoints = points.filter(point => selectedGenres.every(genre => point[4].includes(genre))).slice(0, numPoints);
+  }
+  else if (operation === "intersection")  {
+    filteredPoints = points.filter(point => selectedGenres.some(genre => point[4].includes(genre))).slice(0, numPoints);
+  }
+  // const selectedGenres = Object.keys(genreCheckboxes)
+  //   .reduce((acc, genre) => genreCheckboxes[genre].checked ? acc.concat(genre) : acc, []);
+  // const filteredPoints = points.filter(point => selectedGenres.some(genre => point[4].includes(genre))).slice(0, numPoints);
   updateGraph(filteredPoints.length, filteredPoints);
 }
 
