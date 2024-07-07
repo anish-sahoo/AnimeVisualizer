@@ -4,5 +4,3 @@ venv/
 # Ignore React project
 **/node_modules/
 **/build/
-
-**/*.csv
