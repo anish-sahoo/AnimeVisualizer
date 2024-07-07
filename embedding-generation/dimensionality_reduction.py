@@ -1,7 +1,7 @@
 import pandas as pd
 from sklearn.manifold import TSNE
 import numpy as np
-import plotly.express as px
+# import plotly.express as px
 
 # Load the new combined embeddings
 combined_embeddings_df = pd.read_csv('anime_embeddings.csv')
