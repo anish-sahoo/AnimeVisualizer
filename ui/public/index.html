@@ -27,6 +27,20 @@
           <option value="members">Members Count</option>
           <option value="favorited">Favorited Count</option>
         </select>
+        <br/>
+        </div id="dropdownContainer">
+          <label for="studioDropdown">Filter by Studio:</label>
+          <select id="studioDropdown">
+            <option value="none">None</option>
+            <option value="Studio Ghibli">Studio Ghibli</option>
+            <option value="Kyoto">Kyoto Animation</option>
+            <option value="MAPPA">Mappa</option>
+            <option value="Toei">Toei Animation</option>
+            <option value="ufo">Ufotable</option>
+            <option value="Madhouse">Madhouse</option>
+            <option value="Pierrot">Pierrot</option>
+          </select>
+        <div>
       </div>      
       <button id="toggleCheckboxesButton">Show/Hide Genres</button>
       <div>
@@ -42,6 +56,8 @@
           <ul id="genresList"></ul>
         </div>
       </div>
+      
+      
     </div>
     <script type="module" src="/script.js"></script>
     <script type="module" src="/utils.js"></script>

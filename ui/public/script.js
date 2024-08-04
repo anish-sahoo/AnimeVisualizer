@@ -83,12 +83,17 @@ async function loadData() {
 
 const colorAttributeDropdown = document.getElementById("colorAttributeDropdown");
 const sizeAttributeDropdown = document.getElementById("sizeAttributeDropdown");
+const studioDropdown = document.getElementById("studioDropdown");
 
 colorAttributeDropdown.addEventListener("change", () => {
   updateGraphWithCheckboxes();
 });
 
 sizeAttributeDropdown.addEventListener("change", () => {
+  updateGraphWithCheckboxes();
+});
+
+studioDropdown.addEventListener("change", () => {
   updateGraphWithCheckboxes();
 });
 
@@ -242,16 +247,21 @@ function updateGraphWithCheckboxes(numPoints = parseInt(pointSlider.value)) {
   const selectedGenres = Object.keys(genreCheckboxes)
     .reduce((acc, genre) => genreCheckboxes[genre].checked ? acc.concat(genre) : acc, []);
   const operation = document.querySelector('input[name="genreOperation"]:checked').value;
-  let filteredPoints;
+  
+  // const selectedStudio = studioDropdown.value;
+  // console.log(selectedStudio);
+  // let filteredPoints = selectedStudio == "none" ? points : points.filter(point => point[12].includes(selectedStudio));
+  
+  let filteredPoints = points;
   if (operation === "union") {
-    filteredPoints = points.filter(point => selectedGenres.every(genre => point[4].includes(genre))).slice(0, numPoints);
+    filteredPoints = filteredPoints.filter(
+      point => selectedGenres.every(genre => point[4].includes(genre)) 
+    ).slice(0, numPoints);
   }
   else if (operation === "intersection")  {
-    filteredPoints = points.filter(point => selectedGenres.some(genre => point[4].includes(genre))).slice(0, numPoints);
+    filteredPoints = filteredPoints.filter(point => selectedGenres.some(genre => point[4].includes(genre))
+    ).slice(0, numPoints);
   }
-  // const selectedGenres = Object.keys(genreCheckboxes)
-  //   .reduce((acc, genre) => genreCheckboxes[genre].checked ? acc.concat(genre) : acc, []);
-  // const filteredPoints = points.filter(point => selectedGenres.some(genre => point[4].includes(genre))).slice(0, numPoints);
   updateGraph(filteredPoints.length, filteredPoints);
 }
 
