@@ -78,7 +78,8 @@ def dbscan_and_display(eps, min_samples):
 
     fig = px.scatter(df, x='Dimension 1', y='Dimension 2', color='Cluster', hover_data=['title'],
                     title=f'DBSCAN Clustering with Cluster Areas (eps={eps}, min_samples={min_samples}. Total clusters: {len(cluster_centers)}')
-
+    print(len(cluster_centers))
+    print(len(cluster_radii))
     for i, center in enumerate(cluster_centers):
         fig.add_shape(
             type="circle",
@@ -97,3 +98,7 @@ min_samples = 1  # adjust based on your data
 dbscan_and_display(eps, min_samples)
 
 
+
+# %%
+df.head()
+# %%
