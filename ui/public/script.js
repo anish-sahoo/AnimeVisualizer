@@ -248,19 +248,19 @@ function updateGraphWithCheckboxes(numPoints = parseInt(pointSlider.value)) {
     .reduce((acc, genre) => genreCheckboxes[genre].checked ? acc.concat(genre) : acc, []);
   const operation = document.querySelector('input[name="genreOperation"]:checked').value;
   
-  // const selectedStudio = studioDropdown.value;
-  // console.log(selectedStudio);
-  // let filteredPoints = selectedStudio == "none" ? points : points.filter(point => point[12].includes(selectedStudio));
+  const selectedStudio = studioDropdown.value;
+  let filteredPoints = selectedStudio == "none" ? points : points.filter(point => point[12].includes(selectedStudio));
   
-  let filteredPoints = points;
+  // let filteredPoints = points;
   if (operation === "union") {
-    filteredPoints = filteredPoints.filter(
-      point => selectedGenres.every(genre => point[4].includes(genre)) 
-    ).slice(0, numPoints);
+    filteredPoints = filteredPoints
+      .filter(point => selectedGenres.every(genre => point[4].includes(genre)))
+      .slice(0, numPoints);
   }
   else if (operation === "intersection")  {
-    filteredPoints = filteredPoints.filter(point => selectedGenres.some(genre => point[4].includes(genre))
-    ).slice(0, numPoints);
+    filteredPoints = filteredPoints
+    .filter(point => selectedGenres.some(genre => point[4].includes(genre)))
+    .slice(0, numPoints);
   }
   updateGraph(filteredPoints.length, filteredPoints);
 }
