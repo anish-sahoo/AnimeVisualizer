@@ -8,7 +8,7 @@ import {
   calculateColor,
 } from "./utils.js";
 
-const point_limit = 5000; // Limit the number of points to display
+const point_limit = 5000;
 
 // Create a new PixiJS application
 const app = new PIXI.Application({
@@ -28,12 +28,12 @@ const tooltip = new PIXI.Text("", {
   fontFamily: "Arial",
   fontSize: 18,
   fill: "white",
-  backgroundColor: "black",
   padding: 5,
   wordWrap: true,
   wordWrapWidth: 200
 });
-tooltip.visible = false; // Initially hide the tooltip
+
+tooltip.visible = false;
 app.stage.addChild(tooltip);
 
 let points, max_episode_count, genres, labels, max_score, max_members_count, max_favorited_count, types, studios, demographics, genre_counts;
