@@ -10,3 +10,8 @@ venv/
 **/*.ipynb
 
 notebooks/
+
+**/target/
+
+.idea/discord.xml
+.idea/workspace.xml

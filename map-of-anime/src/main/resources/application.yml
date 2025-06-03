@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: map-of-anime
+
+  graphql:
+    graphiql:
+      enabled: true
+      path: /graphiql
