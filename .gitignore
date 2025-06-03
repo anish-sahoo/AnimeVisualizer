@@ -15,3 +15,5 @@ notebooks/
 
 .idea/discord.xml
 .idea/workspace.xml
+
+map-of-anime/src/main/resources/static/
