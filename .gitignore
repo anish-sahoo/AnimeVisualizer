@@ -1,5 +1,6 @@
 # Ignore venv directory
 venv/
+**/venv/
 
 # Ignore React project
 **/node_modules/

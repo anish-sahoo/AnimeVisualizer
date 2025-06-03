@@ -6,3 +6,9 @@ spring:
     graphiql:
       enabled: true
       path: /graphiql
+
+server:
+  port: 8080
+  compression:
+    enabled: true
+    min-response-size: 2048
