@@ -9,6 +9,12 @@ Goals:
   - text based, plot based, score based, things similar people have seen.
 - visualize those in a website
 
+New Goals (6/3/25)
+- use MAL and rewrite the scraper to not use beautifulsoup and instead use the actual API
+- Add user preference embedding (average of all the user's liked anime) - use small embeddings for this so it's less intensive on server
+- store data in postgres + create embeddings for elastic
+- find someone to make the ui nice
+
 ## System Architecture
 ```mermaid
 graph TD
