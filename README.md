@@ -14,6 +14,7 @@ New Goals (6/3/25)
 - Add user preference embedding (average of all the user's liked anime) - use small embeddings for this so it's less intensive on server
 - store data in postgres + create embeddings for elastic
 - find someone to make the ui nice
+- add search and recommendation feature - lots of vector search
 
 ## System Architecture
 ```mermaid
