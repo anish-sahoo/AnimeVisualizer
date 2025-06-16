@@ -71,12 +71,13 @@ Ideas we could implement later
   - Genre, studio, rating, year, length, airing/completed
   - Moods: "wholesome", "tragic", "philosophical", "intense"
   - Popularity tiers: "Hidden gems", "Cult classics", "Underrated"
-    - Total view count:	Determines popularity threshold
-    - Rating score:	High score + low views = hidden gem
-    - Watchlist count:	Measures broad interest or fandom
-    - Rating count:	Low = obscure; High = popular
-    - Recency:	Adjust expectations for new vs. old anime
-    - Engagement ratio:	Score / views → popularity-per-view
+    - Signals: 
+      - Total view count:	Determines popularity threshold
+      - Rating score:	High score + low views = hidden gem
+      - Watchlist count:	Measures broad interest or fandom
+      - Rating count:	Low = obscure; High = popular
+      - Recency:	Adjust expectations for new vs. old anime
+      - Engagement ratio:	Score / views → popularity-per-view
     - Labels:
       - Hidden Gem:	High average rating (e.g., >8.2) + low viewership (bottom 25%)
       - Underrated:	High quality (e.g., tags, reviews) + low rating (e.g., <7.0) OR mismatch in viewership vs. rating/depth
