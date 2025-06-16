@@ -27,7 +27,8 @@ Side thoughts
 - ci/cd pipeline to track version/rollout
 - instrumentation - some type of splunk logs would be nice
 - down detection
-- monetizing the site? 
+- monetizing the site?
+- recommendation system could have some boosting based on the ranks (ranks change over time so different results get boosted based on what's popular at the moment)
 
 Implementation Plans
 - initial data returned to ui should be very minimal, get more data for an individual anime later using graph calls
