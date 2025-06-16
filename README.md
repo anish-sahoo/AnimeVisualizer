@@ -23,6 +23,11 @@ New Goals (6/3/25)
 - cron job to sync elastic and sql (figure out how much data to keep in both data stores and how much can be normalized)
 - figure out schema (use postgres or some performant sql db that can be sharded if necessary)
 
+Side thoughts
+- monetizing the site?
+- ci/cd pipelines + instrumentation 
+
+
 ## System Architecture
 ```mermaid
 graph TD
