@@ -18,3 +18,5 @@ notebooks/
 .idea/workspace.xml
 
 map-of-anime/src/main/resources/static/
+
+.vscode/
