@@ -14,7 +14,7 @@ New Goals (6/3/25)
 - Add user preference embedding (average of all the user's liked anime) - use small embeddings for this so it's less intensive on server
 - store data in postgres + create embeddings for elastic
 - find someone to make the ui nice
-- add search and recommendation feature - lots of vector search
+- add search and recommendation system (content filtering) - lots of vector search and hybrid/blended search
 - vector search for search bar
 - some form of top k feature where the user picks a few anime and we use the average embedding of those anime (use small embeddings)
 - find a good balanced embedding dimension that allows good search but is also light on the cpu
