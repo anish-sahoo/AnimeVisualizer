@@ -15,7 +15,7 @@ New Goals (6/3/25)
 - store data in postgres + create embeddings for elastic
 - find someone to make the ui nice
 - add search and recommendation system (content filtering) - lots of vector search and hybrid/blended search
-- vector search for search bar
+- vector search for search bar (natural language input such as "anime about revenge and demons" (e.g. demon slayer)
 - some form of top k feature where the user picks a few anime and we use the average embedding of those anime (use small embeddings)
 - find a good balanced embedding dimension that allows good search but is also light on the cpu
 - graph layer + graph api to fetch data about an anime (figure out if its worth storing most anime data or querying from mal when needed)
@@ -37,6 +37,10 @@ Implementation Plans
 - exploration vs exploitation - if popular items keep getting recommended → use exploration (maybe keep a count of how many times something has been recommended)
 - mix in unusual or slightly random recommendations (exploration)
 - penalize redundancy in recommendations (genre, studio, etc.)
+
+Ideas we could implement later 
+- anime discovery quiz (may require more understanding of what anime falls into what categor(ies))
+- mood based filtering: happy, dark, slow-paced, intense, wholesome, tragic, etc. (hard to categorize anime into these labels)
 
 ## System Architecture
 ```mermaid
