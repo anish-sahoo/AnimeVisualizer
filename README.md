@@ -22,6 +22,10 @@ New Goals (6/3/25)
 - caching layer - redis for recently searched anime, will be helpful because `SELECT` operation is costly
 - cron job to sync elastic and sql (figure out how much data to keep in both data stores and how much can be normalized)
 - figure out schema (use postgres or some performant sql db that can be sharded if necessary)
+- surprise me/random button
+- add a seasonal anime feature in the UI
+- "near this anime" feature in UI
+- visual map highlighting what the user has watched
 
 Side thoughts
 - ci/cd pipeline to track version/rollout
@@ -37,10 +41,36 @@ Implementation Plans
 - exploration vs exploitation - if popular items keep getting recommended → use exploration (maybe keep a count of how many times something has been recommended)
 - mix in unusual or slightly random recommendations (exploration)
 - penalize redundancy in recommendations (genre, studio, etc.)
+```
+4. ElasticSearch
+Store:
+Title, description embeddings (from SBERT or BERT)
+Genre tokens, studios
+Popularity, rating, date
+Custom scoring function:
+score = w1 * vector_sim + w2 * genre_match + w3 * popularity_decay
+5. Search Autocomplete
+GraphQL or REST search endpoint for:
+Anime titles
+Tags/genres
+Studio or creator names
+Use fuzzy search and prefix matching via Elasticsearch
+6. Analytics Collection
+Track:
+Time spent on anime pages
+Hover → clickthrough ratios in maps
+Filter usage patterns
+Store in PostgreSQL or send to a time-series DB for later improvements
+```
+
 
 Ideas we could implement later 
 - anime discovery quiz (may require more understanding of what anime falls into what categor(ies))
 - mood based filtering: happy, dark, slow-paced, intense, wholesome, tragic, etc. (hard to categorize anime into these labels)
+- Filtering:
+  - Genre, studio, rating, year, length, airing/completed
+  - Moods: "wholesome", "tragic", "philosophical", "intense"
+  - Popularity tiers: "Hidden gems", "Cult classics", "Underrated"
 
 ## System Architecture
 ```mermaid
