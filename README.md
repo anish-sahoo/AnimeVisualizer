@@ -41,6 +41,7 @@ Implementation Plans
 - exploration vs exploitation - if popular items keep getting recommended → use exploration (maybe keep a count of how many times something has been recommended)
 - mix in unusual or slightly random recommendations (exploration)
 - penalize redundancy in recommendations (genre, studio, etc.)
+- signoz instrumentation
 ```
 4. ElasticSearch
 Store:
