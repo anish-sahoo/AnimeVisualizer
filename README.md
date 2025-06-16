@@ -27,6 +27,10 @@ Side thoughts
 - monetizing the site?
 - ci/cd pipelines + instrumentation 
 
+Implementation Plans
+- initial data returned to ui should be very minimal, get more data for an individual anime later using graph calls
+- may have to implement some form of pagination
+- cron job to scrape + update elastic
 
 ## System Architecture
 ```mermaid
