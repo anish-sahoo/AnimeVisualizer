@@ -35,6 +35,8 @@ Implementation Plans
 - may have to implement some form of pagination
 - cron job to scrape + update elastic
 - exploration vs exploitation - if popular items keep getting recommended → use exploration (maybe keep a count of how many times something has been recommended)
+- mix in unusual or slightly random recommendations (exploration)
+- penalize redundancy in recommendations (genre, studio, etc.)
 
 ## System Architecture
 ```mermaid
