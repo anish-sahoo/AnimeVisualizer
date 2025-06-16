@@ -19,7 +19,7 @@ New Goals (6/3/25)
 - some form of top k feature where the user picks a few anime and we use the average embedding of those anime (use small embeddings)
 - find a good balanced embedding dimension that allows good search but is also light on the cpu
 - graph layer + graph api to fetch data about an anime (figure out if its worth storing most anime data or querying from mal when needed)
-- caching layer - redis for recently searched anime, will be helpful because `SELECT` operation is costly
+- caching layer - redis for recently searched anime, will be helpful because `SELECT` operation is costly - bloom filter?
 - cron job to sync elastic and sql (figure out how much data to keep in both data stores and how much can be normalized)
 - figure out schema (use postgres or some performant sql db that can be sharded if necessary)
 - surprise me/random button
