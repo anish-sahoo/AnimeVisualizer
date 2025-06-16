@@ -24,8 +24,10 @@ New Goals (6/3/25)
 - figure out schema (use postgres or some performant sql db that can be sharded if necessary)
 
 Side thoughts
-- monetizing the site?
-- ci/cd pipelines + instrumentation 
+- ci/cd pipeline to track version/rollout
+- instrumentation - some type of splunk logs would be nice
+- down detection
+- monetizing the site? 
 
 Implementation Plans
 - initial data returned to ui should be very minimal, get more data for an individual anime later using graph calls
