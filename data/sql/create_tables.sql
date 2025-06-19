@@ -6,6 +6,11 @@ select pg_sleep(5);
 -- database name
 create database anime;
 
+
+-- destroys all tables without deleting database
+DROP SCHEMA public CASCADE;
+CREATE SCHEMA public;
+
 -- enum for show status - to be used later
 -- ova = "original video animation" (bonus series or side stories)
 -- ona = "original net animation" (web series)
