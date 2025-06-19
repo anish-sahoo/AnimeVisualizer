@@ -1,0 +1,3 @@
+0 3 * * 0 python3 /app/scrape.py >> /var/log/cron.log 2>&1
+
+# every sunday 3am

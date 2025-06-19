@@ -20,3 +20,5 @@ notebooks/
 map-of-anime/src/main/resources/static/
 
 .vscode/
+
+**/.env
