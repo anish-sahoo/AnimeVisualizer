@@ -65,6 +65,7 @@ create table anime if not exists (
     status status NOT NULL,
     num_episodes INT,
     source source NOT NULL,
+    active BOOLEAN DEFAULT true
 );
 
 -- table #4
