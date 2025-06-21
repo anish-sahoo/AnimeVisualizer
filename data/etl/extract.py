@@ -3,6 +3,9 @@ import time
 import logging as log
 from rich.logging import RichHandler
 from etl.config import HEADERS
+from dotenv import load_dotenv
+
+load_dotenv()
 
 log.basicConfig(
     level=log.INFO,

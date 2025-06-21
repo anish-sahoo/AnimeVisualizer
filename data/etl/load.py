@@ -14,11 +14,11 @@ def write(data):
     anime_details, genres, studios = data
     anime_id = anime_details['id']
     
-    log.info(f"Writing data: {anime_id} - {anime_details['title']}")
+    # log.info(f"Writing data: {anime_id} - {anime_details['title']}")
     try:
         db.insert_anime(anime_details)
     except Exception as e:
-        log.exception(f'Failed to insert anime {anime_id} - {anime_details['title']}')
+        log.exception(f'Failed to insert anime {anime_id} - {anime_details['title']} -> {e}')
         return
     
     for genre in genres:
