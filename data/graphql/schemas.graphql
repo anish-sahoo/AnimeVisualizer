@@ -66,6 +66,12 @@ type UserRating {
     rating: Int!
 }
 
-type UserRatings {
-    ratings: [UserRating!]!
+type Query {
+    getAnimeByID(id: ID!): Anime
+
+    searchAnime(titleKeyword: String!, limit: Int = 5): [Anime!]!
+
+    getUsersRatings(username: String!, limit: Int = 10): [UserRating!]!
+
+    getAnimesByStatus(status: Status!, limit: Int = 10): [Anime!]!
 }
