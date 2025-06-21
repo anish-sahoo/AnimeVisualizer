@@ -1,6 +1,7 @@
 FROM python:3.12.11-alpine3.22
 
-RUN apt-get update && apt-get install -y cron
+# Uses an Alpine image for now, we can replace later with a debian based image
+RUN apk add --no-cache dcron
 
 WORKDIR /app
 
@@ -16,4 +17,4 @@ RUN crontab /etc/cron.d/etl-cron
 
 RUN touch /var/log/cron.log
 
-CMD ["sh", "-c", "cron && tail -f /var/log/cron.log"]
+CMD ["sh", "-c", "crond && tail -f /var/log/cron.log"]
