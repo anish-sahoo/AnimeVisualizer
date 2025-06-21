@@ -1,0 +1,77 @@
+enum MediaType {
+    UNKNOWN, TV, OVA, SPECIAL, ONA, MUSIC, MOVIE, TV_SPECIAL
+}
+
+enum Source {
+    OTHER, ORIGINAL, MANGA, 4_KOMA_MANGA, WEB_MANGA,
+    DIGITAL_MANGA, NOVEL, LIGHT_NOVEL, VISUAL_NOVEL,
+    GAME, CARD_GAME, BOOK, PICTURE_BOOK, RADIO, MUSIC
+}
+
+enum Status {
+    FINISHED_AIRING, CURRENTLY_AIRING, NOT_YET_AIRED
+}
+
+# R+ isn't a valid enum, so it's written out here
+enum AgeRating {
+    G, PG, PG13, R, RPLUS
+}
+
+# i haven't added context, since I don't believe there will be public queries for the "results" table
+
+type User {
+    # ID is built into graphql, equal to SERIAL PRIMARY KEY in postgres
+    id: ID!
+    username: String!
+}
+
+# NOT NULL translates to !
+# i'm also using String for dates
+
+type Anime {
+    id: ID!
+    title: String!
+    thumbnail: String
+    start_date: String!
+    end_date: String
+    synopsis: String
+    score: Float!
+    rank: Int!
+    popularity: Int!
+    num_list_users: Int!
+    num_scoring_users Int!
+    updated_at: String
+
+    # note: do we want this to be represented as epoch time (Int) or an ISO timestamp (String)
+    last_scraped_at: String
+    media_type: MediaType!
+    status: Status!
+    num_episodes: Int
+    source: Source!
+    age_rating: AgeRating!
+    active: Boolean!
+
+    # genre/studio will be tricky to represent since they'll need a JOIN
+    # for now i'm just keeping them both as Strings
+
+    # for reference, [String!]! translates to "must be a non-null list, where the items in the list cannot be null"
+    # this means that the list can be empty [], just not null
+    studio: [String!]!
+    genre: [String!]!
+}
+
+type UserRating {
+    username: String!
+    anime_id: Int!
+    rating: Int!
+}
+
+type Query {
+    getAnimeByID(id: ID!): Anime
+
+    searchAnime(titleKeyword: String!, limit: Int = 5): [Anime!]!
+
+    getUsersRatings(username: String!, limit: Int = 10): [UserRating!]!
+
+    getAnimesByStatus(status: Status!, limit: Int = 10): [Anime!]!
+}
