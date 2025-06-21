@@ -10,6 +10,7 @@ SELECT
     'synopsis', a.synopsis,
     'score', a.score,
     'rank', a."rank",
+    'age_rating', a.age_rating,
     'popularity', a.popularity,
     'num_list_users', a.num_list_users,
     'num_scoring_users', a.num_scoring_users,

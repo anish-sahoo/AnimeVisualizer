@@ -33,7 +33,10 @@ class PostgresETL:
             self.conn.close()
             log.info("Postgres connection closed.")
 
-    def insert_anime(self, columns, row):
+    def insert_anime(self, anime_details):
+        columns = list(anime_details.keys())
+        row = list(anime_details.values())
+    
         placeholders = ", ".join(["%s"] * len(columns))
         columns_str = ", ".join(columns)
         query = f"INSERT INTO anime ({columns_str}) VALUES ({placeholders})"
@@ -42,12 +45,10 @@ class PostgresETL:
             with self.conn.cursor() as cur:
                 cur.execute(query, row)
             self.conn.commit()
-            return True
         except Exception as e:
-            log.info(f"Error inserting row: {e}")
+            log.error(f"Error inserting row: {e}")
             if self.conn:
                 self.conn.rollback()
-            return False
                 
     def get_genre_id_or_create_new(self, genre):
         try:
@@ -57,6 +58,7 @@ class PostgresETL:
                 result = cur.fetchone()
                 if result:
                     return result[0]
+                log.info(f'New genre {genre["id"]} {genre["name"]} found, inserting into db')
                 cur.execute(
                     "INSERT INTO genres (id, name) VALUES (%s, %s) RETURNING id",
                     (genre["id"], genre["name"])
@@ -65,7 +67,7 @@ class PostgresETL:
                 self.conn.commit()
                 return genre_id
         except Exception as e:
-            log.info(f"Error getting or creating genre: {e}")
+            log.error(f"Error getting or creating genre: {e}")
             if self.conn:
                 self.conn.rollback()
             return None
@@ -80,7 +82,7 @@ class PostgresETL:
                 )
             self.conn.commit()
         except Exception as e:
-            log.info(f"Error linking anime to genre: {e}")
+            log.error(f"Error linking anime to genre: {e}")
             if self.conn:
                 self.conn.rollback()
 
@@ -92,6 +94,7 @@ class PostgresETL:
                 result = cur.fetchone()
                 if result:
                     return result[0]
+                log.info(f'New studio {studio["id"]} {studio["name"]} found, inserting into db')
                 cur.execute(
                     "INSERT INTO studios (id, name) VALUES (%s, %s) RETURNING id",
                     (studio["id"], studio["name"])
@@ -115,6 +118,6 @@ class PostgresETL:
                 )
             self.conn.commit()
         except Exception as e:
-            log.info(f"Error linking anime to studio: {e}")
+            log.error(f"Error linking anime to studio: {e}")
             if self.conn:
                 self.conn.rollback()

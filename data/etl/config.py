@@ -15,8 +15,8 @@ HEADERS = {
 FIELDS = [
     "id","title","main_picture","start_date","end_date","synopsis",
     "mean","rank","popularity","num_list_users","num_scoring_users",
-    "genre","updated_at","last_scraped_at","media_type","status",
-    "num_episodes","source","studios"
+    "genres","updated_at","last_scraped_at","media_type","status",
+    "num_episodes","source","studios", "nsfw", "rating"
 ]
 
 TOTAL_AMOUNT_TO_SCRAPE = 10

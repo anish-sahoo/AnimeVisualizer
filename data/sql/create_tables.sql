@@ -15,8 +15,8 @@ CREATE SCHEMA public;
 -- ona = "original net animation" (web series)
 DO $$
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'status') THEN
-        CREATE TYPE status AS ENUM ('unknown', 'tv', 'ova', 'special', 'ona', 'music');
+    IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'media_type') THEN
+        CREATE TYPE media_type AS ENUM ('unknown', 'tv', 'ova', 'special', 'ona', 'music', 'movie', 'tv_special');
     END IF;
 END$$;
 
@@ -27,6 +27,24 @@ BEGIN
             'other', 'original', 'manga', '4_koma_manga', 'web_manga',
             'digital_manga', 'novel', 'light_novel', 'visual_novel', 'game',
             'card_game', 'book', 'picture_book', 'radio', 'music'
+        );
+    END IF;
+END$$;
+
+DO $$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'status') THEN
+        CREATE TYPE status AS ENUM (
+            'finished_airing', 'currently_airing', 'not_yet_aired'
+        );
+    END IF;
+END$$;
+
+DO $$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'age_rating') THEN
+        CREATE TYPE age_rating AS ENUM (
+            'g', 'pg', 'pg_13', 'r', 'r+', 'rx'
         );
     END IF;
 END$$;
@@ -68,10 +86,11 @@ create table if not exists anime  (
     num_scoring_users INT NOT NULL,
     updated_at DATE,
     last_scraped_at TIMESTAMP,
-    media_type VARCHAR(255),
+    media_type media_type NOT NULL,
     status status NOT NULL,
     num_episodes INT,
     source source NOT NULL,
+    age_rating age_rating NOT NULL,
     active BOOLEAN DEFAULT true
 );
 
