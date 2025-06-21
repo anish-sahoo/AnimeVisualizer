@@ -45,7 +45,9 @@ libdnf5==5.2.13.1
 LinkChecker==10.5.0
 louis==3.28.0
 lxml==5.3.2
+markdown-it-py==3.0.0
 mccabe==0.7.0
+mdurl==0.1.2
 mypy==1.15.0
 mypy_extensions==1.0.0
 nftables==0.1
@@ -61,6 +63,7 @@ platformdirs==4.2.2
 ply==3.11
 productmd==1.45
 psutil==6.1.1
+psycopg==3.2.9
 ptyprocess==0.7.0
 pwquality==1.4.5
 pycairo==1.25.1
@@ -96,6 +99,7 @@ regex==2024.11.6
 requests==2.32.3
 requests-file==2.0.0
 requests-ftp==0.3.1
+rich==14.0.0
 rpds-py==0.24.0
 rpm==4.20.1
 s3transfer==0.12.0

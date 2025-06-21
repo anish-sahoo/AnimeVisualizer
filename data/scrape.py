@@ -1,19 +1,24 @@
 import time
 import logging as log
+from rich.logging import RichHandler
 
 from etl.extract import fetch
 from etl.transform import transform_rank_data, clean
 from etl.load import write
 from etl.config import generate_ranking_urls, generate_anime_details_url
 
-log.basicConfig(level=log.INFO, format='%(asctime)s [%(levelname)s] %(message)s')
+log.basicConfig(
+    level=log.INFO,
+    format='%(asctime)s [%(levelname)s] %(message)s',
+    handlers=[RichHandler()]
+)
 
 def scrape_all():
     for url in generate_ranking_urls():
         data = fetch(url)
         if not data or "data" not in data:
             continue
-
+        log.info("fetch successful")
         for entry in data["data"]:
             rank_info = transform_rank_data(entry)
             if None in rank_info.values():
