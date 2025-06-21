@@ -3,7 +3,7 @@ version: "3.8"
 services:
   postgres:
     image: postgres:14
-    container_name: postgres
+    container_name: map-of-anime-postgres
     restart: unless-stopped
     ports:
       - "7001:5432"
@@ -18,7 +18,7 @@ services:
     build:
       context: ./data
       dockerfile: Dockerfile
-    container_name: etl-cron
+    container_name: map-of-anime-etl-cron
     restart: unless-stopped
     environment:
       MAL_API_URL: ${MAL_API_URL}
@@ -32,7 +32,7 @@ services:
 
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.13.4
-    container_name: elasticsearch
+    container_name: map-of-anime-elasticsearch
     restart: unless-stopped
     environment:
       ELASTIC_PASSWORD: ${ELASTIC_PASSWORD}
@@ -54,7 +54,7 @@ services:
 
   redis:
     image: redis:7
-    container_name: redis
+    container_name: map-of-anime-redis
     restart: unless-stopped
     command: redis-server --requirepass ${REDIS_PASSWORD}
     ports:
