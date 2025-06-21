@@ -41,9 +41,9 @@ services:
     environment:
       ELASTIC_PASSWORD: ${ELASTIC_PASSWORD}
       discovery.type: single-node
-      bootstrap.memory_lock: true
-      xpack.security.enabled: true
-      xpack.security.transport.ssl.enabled: false
+      bootstrap.memory_lock: "true"
+      xpack.security.enabled: "true"
+      xpack.security.transport.ssl.enabled: "false"
     ports:
       - "7002:9200"
       - "7003:9300"

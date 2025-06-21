@@ -43,4 +43,4 @@ setup:
 	. .venv/bin/activate && \
 	pip3 install -r requirements.txt
 
-	cd ../ui && npm install
+	cd ui && npm install
