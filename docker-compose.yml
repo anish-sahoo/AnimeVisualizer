@@ -21,8 +21,8 @@ services:
     container_name: etl-cron
     restart: unless-stopped
     environment:
-      - MAL_API_URL: ${MAL_API_URL}
-      - MAL_CLIENT_ID: ${MAL_CLIENT_ID}
+      MAL_API_URL: ${MAL_API_URL}
+      MAL_CLIENT_ID: ${MAL_CLIENT_ID}
     depends_on:
       - postgres
     volumes:
