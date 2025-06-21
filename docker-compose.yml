@@ -23,6 +23,12 @@ services:
     environment:
       MAL_API_URL: ${MAL_API_URL}
       MAL_CLIENT_ID: ${MAL_CLIENT_ID}
+      ELASTIC_URL: "elasticsearch:9200"
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+      POSTGRES_NAME: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASS: ${POSTGRES_PASSWORD}
     depends_on:
       - postgres
     volumes:
@@ -69,10 +75,11 @@ services:
       context: ./map-of-anime
       dockerfile: Dockerfile
     restart: unless-stopped
+    map-of-anime:
     environment:
-      POSTGRES_URL: "localhost:7001"
-      ELASTIC_URL: "localhost:7002"
-      REDIS_URL: "localhost:7004"
+      POSTGRES_URL: "postgres:5432"
+      ELASTIC_URL: "elasticsearch:9200"
+      REDIS_URL: "redis:6379"
     profiles:
       - deploy
 
