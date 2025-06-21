@@ -18,7 +18,7 @@ def clean(anime_details):
     anime['start_date'] = anime_details.get('start_date')
     anime['age_rating'] = anime_details.get('rating')
     anime['end_date'] = anime_details.get('end_date')
-    anime['synopsis'] = anime_details.get('synopsis')
+    anime['synopsis'] = anime_details.get('synopsis').replace('[Written by MAL Rewrite]', '').replace('\n', '')
     anime['score'] = anime_details.get('mean')
     anime['rank'] = anime_details.get('rank')
     anime['popularity'] = anime_details.get('popularity')
