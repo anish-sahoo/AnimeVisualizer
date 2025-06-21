@@ -35,11 +35,11 @@ services:
     container_name: elasticsearch
     restart: unless-stopped
     environment:
-      - discovery.type=single-node
-      - bootstrap.memory_lock=true
-      - xpack.security.enabled=true
-      - xpack.security.transport.ssl.enabled=false
-      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+      ELASTIC_PASSWORD: ${ELASTIC_PASSWORD}
+      discovery.type: single-node
+      bootstrap.memory_lock: true
+      xpack.security.enabled: true
+      xpack.security.transport.ssl.enabled: false
     ports:
       - "7001:9200"
       - "7002:9300"
@@ -70,9 +70,9 @@ services:
       dockerfile: Dockerfile
     restart: unless-stopped
     environment:
-      - POSTGRES_URL: "localhost:7001"
-      - ELASTIC_URL: "localhost:7002"
-      - REDIS_URL: "localhost:7003"
+      POSTGRES_URL: "localhost:7001"
+      ELASTIC_URL: "localhost:7002"
+      REDIS_URL: "localhost:7003"
     profiles:
       - infra
       - deploy
