@@ -9,7 +9,7 @@ def transform_rank_data(raw_data):
     }
 
 def clean(anime_details):
-    if anime_details['nsfw'] != "white" or anime_details['rating'] == 'rx':
+    if anime_details['nsfw'] == "black" or anime_details['rating'] == 'rx':
         return None
     anime = {}
     anime['id'] = anime_details.get('id')
