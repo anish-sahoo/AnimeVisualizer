@@ -1,4 +1,4 @@
-.PHONY: psql scrape reset-db up deploy infra ui
+.PHONY: psql scrape reset-db up deploy infra ui setup
 
 psql:
 	@export $$(cat .env | grep -v '^#' | xargs) && \
@@ -31,3 +31,16 @@ infra:
 
 ui:
 	cd ui && npm start
+
+setup:
+	cd data && \
+	if [ -d .venv ]; then \
+		echo "Activating existing virtual environment"; \
+	else \
+		echo "Creating new virtual environment"; \
+		python3 -m venv .venv; \
+	fi && \
+	. .venv/bin/activate && \
+	pip3 install -r requirements.txt
+
+	cd ../ui && npm install

@@ -36,17 +36,26 @@ class PostgresETL:
     def insert_anime(self, anime_details):
         columns = list(anime_details.keys())
         row = list(anime_details.values())
-    
+
         placeholders = ", ".join(["%s"] * len(columns))
         columns_str = ", ".join(columns)
-        query = f"INSERT INTO anime ({columns_str}) VALUES ({placeholders})"
+        
+        update_columns = [col for col in columns if col != 'id']
+        update_clause = ", ".join([f"{col} = EXCLUDED.{col}" for col in update_columns])
+        
+        query = f"""
+        INSERT INTO anime ({columns_str}) 
+        VALUES ({placeholders})
+        ON CONFLICT (id) DO UPDATE SET {update_clause}
+        """
+        
         try:
             self.connect()
             with self.conn.cursor() as cur:
                 cur.execute(query, row)
             self.conn.commit()
         except Exception as e:
-            log.error(f"Error inserting row: {e}")
+            log.exception(f"Error inserting row: {e}")
             if self.conn:
                 self.conn.rollback()
                 
@@ -67,7 +76,7 @@ class PostgresETL:
                 self.conn.commit()
                 return genre_id
         except Exception as e:
-            log.error(f"Error getting or creating genre: {e}")
+            log.exception(f"Error getting or creating genre: {e}")
             if self.conn:
                 self.conn.rollback()
             return None
@@ -82,7 +91,7 @@ class PostgresETL:
                 )
             self.conn.commit()
         except Exception as e:
-            log.error(f"Error linking anime to genre: {e}")
+            log.exception(f"Error linking anime to genre: {e}")
             if self.conn:
                 self.conn.rollback()
 
@@ -103,7 +112,7 @@ class PostgresETL:
                 self.conn.commit()
                 return studio_id
         except Exception as e:
-            log.info(f"Error getting or creating studio: {e}")
+            log.exception(f"Error getting or creating studio: {e}")
             if self.conn:
                 self.conn.rollback()
             return -1
@@ -118,6 +127,6 @@ class PostgresETL:
                 )
             self.conn.commit()
         except Exception as e:
-            log.error(f"Error linking anime to studio: {e}")
+            log.exception(f"Error linking anime to studio: {e}")
             if self.conn:
                 self.conn.rollback()

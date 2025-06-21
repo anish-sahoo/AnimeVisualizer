@@ -20,12 +20,13 @@ FIELDS = [
 ]
 
 TOTAL_AMOUNT_TO_SCRAPE = 10
+PAGE_SIZE = 500
 
 def generate_anime_details_url(anime_id):
     return f"{BASE_URL}/anime/{anime_id}?fields={','.join(FIELDS)}"
 
 def generate_ranking_urls():
     return [
-        f"{BASE_URL}/anime/ranking?ranking_type=all&limit=500&offset={i*500}"
-        for i in range(math.ceil(TOTAL_AMOUNT_TO_SCRAPE / 500))
+        f"{BASE_URL}/anime/ranking?ranking_type=all&limit={PAGE_SIZE}&offset={i*PAGE_SIZE}"
+        for i in range(math.ceil(TOTAL_AMOUNT_TO_SCRAPE / PAGE_SIZE))
     ]
