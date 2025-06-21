@@ -26,7 +26,7 @@ BEGIN
         CREATE TYPE source AS ENUM (
             'other', 'original', 'manga', '4_koma_manga', 'web_manga',
             'digital_manga', 'novel', 'light_novel', 'visual_novel', 'game',
-            'card_game', 'book', 'picture_book', 'radio', 'music'
+            'card_game', 'book', 'picture_book', 'radio', 'music', 'web_novel'
         );
     END IF;
 END$$;

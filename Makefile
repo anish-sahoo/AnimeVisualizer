@@ -1,4 +1,4 @@
-.PHONY: psql scrape reset-db up deploy infra ui setup
+.PHONY: psql scrape reset-db up deploy infra ui setup scrape-docker stop-scrape-docker remove-containers
 
 psql:
 	@export $$(cat .env | grep -v '^#' | xargs) && \
@@ -44,3 +44,13 @@ setup:
 	pip3 install -r requirements.txt
 
 	cd ui && npm install
+
+scrape-docker:
+	docker exec -d map-of-anime-etl-cron sh -c "python3 /app/scrape.py >> /var/log/cron.log 2>&1"
+
+stop-scrape-docker:
+	docker restart map-of-anime-etl-cron
+
+remove-containers:
+	docker rm -f map-of-anime-elasticsearch map-of-anime-redis map-of-anime-etl-cron map-of-anime-postgres
+	docker compose down

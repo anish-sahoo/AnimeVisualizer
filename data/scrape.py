@@ -18,7 +18,7 @@ def scrape_all():
         data = fetch(url)
         if not data or "data" not in data:
             continue
-        log.info("fetch successful")
+
         for entry in data["data"]:
             rank_info = transform_rank_data(entry)
             if None in rank_info.values():
