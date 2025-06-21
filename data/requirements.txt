@@ -92,7 +92,6 @@ python-meh==0.52
 pyudev==0.24.3
 pyxdg==0.27
 PyYAML==6.0.2
-pyynl @ file:///builddir/build/BUILD/kernel-6.14.5-build/kernel-6.14.5/linux-6.14.5-300.fc42.x86_64/tools/net/ynl
 RapidFuzz==3.11.0
 referencing==0.36.2
 regex==2024.11.6
@@ -104,12 +103,9 @@ rpds-py==0.24.0
 rpm==4.20.1
 s3transfer==0.12.0
 scour==0.38.2
-selinux @ file:///builddir/build/BUILD/libselinux-3.8-build/libselinux-3.8/src
 Send2Trash==1.8.2
 sentry-sdk==2.21.0
-sepolicy @ file:///builddir/build/BUILD/policycoreutils-3.8-build/selinux-3.8/python/sepolicy
 setools==4.5.1
-setroubleshoot @ file:///builddir/build/BUILD/setroubleshoot-3.3.35-build/setroubleshoot-3.3.35/src
 setuptools==74.1.3
 simpleaudio==1.0.4
 simpleline==1.9.0
