@@ -1,0 +1,20 @@
+# Ignore React project
+**/node_modules/
+**/build/
+
+**/*.ipynb
+
+notebooks/
+
+**/target/
+
+.idea/discord.xml
+.idea/workspace.xml
+
+anime-discovery-engine/src/main/resources/static/
+
+.vscode/
+
+**/.env
+
+.idea/

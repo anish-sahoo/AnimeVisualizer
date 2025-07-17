@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Anime Visualizer</title>
+    <link rel="stylesheet" href="/style.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/8.10.2/pixi.min.js" integrity="sha512-XeUAhbvLMaZ8NmpKwtfSqyufxUc/4wLxSQyPd6p4vqA8bUPg9u1q8c1Q78HUSjYRvCXYCuBUMPmKsUH05eUJMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script type="importmap">
+    {
+      "imports": {
+        "pixi.js": "https://cdn.jsdelivr.net/npm/pixi.js@8.10.2/dist/pixi.min.mjs",
+        "pixi-viewport": "https://cdn.jsdelivr.net/npm/pixi-viewport@6.0.3/dist/pixi_viewport.min.js"
+      }
+    }
+    </script>
+  </head>
+  <body>
+    <div class="pane">
+      <label for="pointSlider" id="numPoints">Number of Anime Displayed: 5000</label>
+      <input type="range" id="pointSlider" min="1"/>
+      <div id="dropdownContainer">
+        <label for="colorAttributeDropdown">Color Attribute:</label>
+        <select id="colorAttributeDropdown">
+          <option value="genre">Genre</option>
+          <option value="demographic">Demographic</option>
+          <option value="type">Type</option>
+          <option value="studio">Studio</option>
+        </select>
+        <br/>
+        <label for="sizeAttributeDropdown">Size Attribute:</label>
+        <select id="sizeAttributeDropdown">
+          <option value="constant">Equal Size</option>
+          <option value="episode">Number of Episodes</option>
+          <option value="rating">Rating</option>
+          <option value="members">Members Count</option>
+          <option value="favorited">Favorited Count</option>
+        </select>
+        <br/>
+        </div id="dropdownContainer">
+          <label for="studioDropdown">Filter by Studio:</label>
+          <select id="studioDropdown">
+            <option value="none">None</option>
+            <option value="Studio Ghibli">Studio Ghibli</option>
+            <option value="Kyoto">Kyoto Animation</option>
+            <option value="MAPPA">Mappa</option>
+            <option value="Toei">Toei Animation</option>
+            <option value="ufo">Ufotable</option>
+            <option value="Madhouse">Madhouse</option>
+            <option value="Pierrot">Pierrot</option>
+          </select>
+        <div>
+      </div>      
+      <button id="toggleCheckboxesButton">Show/Hide Genres</button>
+      <div>
+        <label><input type="radio" name="genreOperation" value="intersection" checked> Intersection</label>
+        <label><input type="radio" name="genreOperation" value="union"> Union</label>
+      </div>
+      <div id="checkboxContainer" class="hidden">
+        <div class="buttons">
+          <button id="selectAllButton">Select All</button>
+          <button id="deselectAllButton">Deselect All</button>
+        </div>
+        <div class="scrollable">
+          <ul id="genresList"></ul>
+        </div>
+      </div>
+      <div id="myanimelistUsernameInput">
+        <input type="text" id="myanimelistUsername" placeholder="Enter MyAnimeList Username" />
+        <button id="submitButton">Submit</button>
+      </div>
+      
+      
+    </div>
+    <script type="module" src="/script.js"></script>
+    <script type="module" src="/utils.js"></script>
+  </body>
+</html>
